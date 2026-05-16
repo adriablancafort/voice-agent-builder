@@ -1,8 +1,8 @@
-import 'dotenv/config';
-import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
+import { serve } from "@hono/node-server"
+import "dotenv/config"
+import { Hono } from "hono"
 import { cors } from "hono/cors"
-import { logger } from 'hono/logger'
+import { logger } from "hono/logger"
 
 const app = new Hono()
 
@@ -19,13 +19,16 @@ app.use(
 
 app.use(logger())
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
+app.get("/", (c) => {
+  return c.text("Hello Hono!")
 })
 
-serve({
-  fetch: app.fetch,
-  port
-}, (info) => {
-  console.log(`Server is running on http://localhost:${info.port}`)
-})
+serve(
+  {
+    fetch: app.fetch,
+    port,
+  },
+  (info) => {
+    console.log(`Server is running on http://localhost:${info.port}`)
+  }
+)
