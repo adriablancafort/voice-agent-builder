@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "rm -rf dist && rolldown -c",
     "start": "node dist/index.js"
   },
   "dependencies": {
@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
+    "rolldown": "^1.0.1",
     "tsx": "^4.7.1",
     "typescript": "^5.8.3"
   }
