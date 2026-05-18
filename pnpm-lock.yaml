@@ -50,9 +50,21 @@ importers:
       '@hono/node-server':
         specifier: ^1.19.14
         version: 1.19.14(hono@4.12.19)
+      '@hono/zod-validator':
+        specifier: ^0.8.0
+        version: 0.8.0(hono@4.12.19)(zod@4.4.3)
+      '@workspace/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@workspace/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
+      drizzle-orm:
+        specifier: 1.0.0-beta.22
+        version: 1.0.0-beta.22(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(pg@8.20.0)(zod@4.4.3)
       hono:
         specifier: ^4.12.19
         version: 4.12.19
@@ -1051,6 +1063,12 @@ packages:
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
+
+  '@hono/zod-validator@0.8.0':
+    resolution: {integrity: sha512-5uS4S1/LKtZQYvD4BtpPUFkOv8d1wNxHHrChm26buMiEYc1FrHWvDUaKVBwkiVtvSExHSpLGDvcnpI2Copyj9w==}
+    peerDependencies:
+      hono: '>=4.10.0'
+      zod: ^3.25.0 || ^4.0.0
 
   '@huggingface/hub@2.4.1':
     resolution: {integrity: sha512-g/EJG091aIdP1whpSjhqBOL25/m60NKXhYGz3wqp7hLX57r4Fx7QVFfXRbtxI0ZMQjLQV3GYrPtldz38mvOr+w==}
@@ -5493,6 +5511,11 @@ snapshots:
   '@hono/node-server@1.19.14(hono@4.12.19)':
     dependencies:
       hono: 4.12.19
+
+  '@hono/zod-validator@0.8.0(hono@4.12.19)(zod@4.4.3)':
+    dependencies:
+      hono: 4.12.19
+      zod: 4.4.3
 
   '@huggingface/hub@2.4.1':
     dependencies:
