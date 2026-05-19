@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useNavigate } from "@tanstack/react-router"
 import { PlusIcon } from "lucide-react"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
@@ -34,6 +35,8 @@ import { api } from "@/lib/api"
 
 export function CreateAgentForm() {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const form = useForm<CreateAgentFormInput>({
     resolver: zodResolver(createAgentFormSchema),
@@ -43,14 +46,18 @@ export function CreateAgentForm() {
   })
 
   const createAgentMutation = useMutation({
-    mutationFn: async (payload: CreateAgentInput) =>
+    mutationFn: (payload: CreateAgentInput) =>
       api.post<AgentDraft, CreateAgentInput>("/agents", {
         body: payload,
       }),
-    onSuccess: () => {
+    onSuccess: (agent) => {
       setOpen(false)
       form.reset()
-      toast.success("Agent created")
+      navigate({
+        to: "/agents/$agentId",
+        params: { agentId: agent.id },
+      })
+      queryClient.invalidateQueries({ queryKey: ["agents"] })
     },
     onError: (error) => {
       toast.error(error.message)

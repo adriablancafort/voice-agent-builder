@@ -56,6 +56,39 @@ agentRoutes.post("/", zValidator("json", createAgentInputSchema), async (c) => {
   }
 })
 
+agentRoutes.post(
+  "/:id/duplicate",
+  zValidator("param", agentIdParamsSchema),
+  async (c) => {
+    const { id: agentId } = c.req.valid("param")
+
+    try {
+      const sourceAgent = await db.query.agentsTable.findFirst({
+        where: {
+          id: agentId,
+        },
+      })
+
+      if (!sourceAgent) {
+        return c.json({ error: "Agent not found" }, 404)
+      }
+
+      const [duplicatedAgent] = await db
+        .insert(agentsTable)
+        .values({
+          id: crypto.randomUUID(),
+          name: `${sourceAgent.name} (copy)`.slice(0, 255),
+          draftConfig: sourceAgent.draftConfig,
+        })
+        .returning()
+
+      return c.json(duplicatedAgent satisfies AgentDraft, 201)
+    } catch {
+      return c.json({ error: "Failed to duplicate agent" }, 500)
+    }
+  }
+)
+
 agentRoutes.get("/:id", zValidator("param", agentIdParamsSchema), async (c) => {
   const { id: agentId } = c.req.valid("param")
 
@@ -114,6 +147,31 @@ agentRoutes.patch(
       return c.json(agent satisfies AgentDraft)
     } catch {
       return c.json({ error: "Failed to update agent" }, 500)
+    }
+  }
+)
+
+agentRoutes.delete(
+  "/:id",
+  zValidator("param", agentIdParamsSchema),
+  async (c) => {
+    const { id: agentId } = c.req.valid("param")
+
+    try {
+      const [deletedAgent] = await db
+        .delete(agentsTable)
+        .where(eq(agentsTable.id, agentId))
+        .returning({
+          id: agentsTable.id,
+        })
+
+      if (!deletedAgent) {
+        return c.json({ error: "Agent not found" }, 404)
+      }
+
+      return c.json(deletedAgent)
+    } catch {
+      return c.json({ error: "Failed to delete agent" }, 500)
     }
   }
 )

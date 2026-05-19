@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as sidebarLayoutRouteImport } from './routes/(sidebar)/layout'
 import { Route as sidebarPageRouteImport } from './routes/(sidebar)/page'
 import { Route as sidebarTestAgentPageRouteImport } from './routes/(sidebar)/test-agent/page'
+import { Route as sidebarAgentsPageRouteImport } from './routes/(sidebar)/agents/page'
 
 const sidebarLayoutRoute = sidebarLayoutRouteImport.update({
   id: '/(sidebar)',
@@ -27,27 +28,40 @@ const sidebarTestAgentPageRoute = sidebarTestAgentPageRouteImport.update({
   path: '/test-agent/',
   getParentRoute: () => sidebarLayoutRoute,
 } as any)
+const sidebarAgentsPageRoute = sidebarAgentsPageRouteImport.update({
+  id: '/agents/',
+  path: '/agents/',
+  getParentRoute: () => sidebarLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof sidebarPageRoute
+  '/agents/': typeof sidebarAgentsPageRoute
   '/test-agent/': typeof sidebarTestAgentPageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof sidebarPageRoute
+  '/agents': typeof sidebarAgentsPageRoute
   '/test-agent': typeof sidebarTestAgentPageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(sidebar)': typeof sidebarLayoutRouteWithChildren
   '/(sidebar)/': typeof sidebarPageRoute
+  '/(sidebar)/agents/': typeof sidebarAgentsPageRoute
   '/(sidebar)/test-agent/': typeof sidebarTestAgentPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/test-agent/'
+  fullPaths: '/' | '/agents/' | '/test-agent/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/test-agent'
-  id: '__root__' | '/(sidebar)' | '/(sidebar)/' | '/(sidebar)/test-agent/'
+  to: '/' | '/agents' | '/test-agent'
+  id:
+    | '__root__'
+    | '/(sidebar)'
+    | '/(sidebar)/'
+    | '/(sidebar)/agents/'
+    | '/(sidebar)/test-agent/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,16 +91,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof sidebarTestAgentPageRouteImport
       parentRoute: typeof sidebarLayoutRoute
     }
+    '/(sidebar)/agents/': {
+      id: '/(sidebar)/agents/'
+      path: '/agents'
+      fullPath: '/agents/'
+      preLoaderRoute: typeof sidebarAgentsPageRouteImport
+      parentRoute: typeof sidebarLayoutRoute
+    }
   }
 }
 
 interface sidebarLayoutRouteChildren {
   sidebarPageRoute: typeof sidebarPageRoute
+  sidebarAgentsPageRoute: typeof sidebarAgentsPageRoute
   sidebarTestAgentPageRoute: typeof sidebarTestAgentPageRoute
 }
 
 const sidebarLayoutRouteChildren: sidebarLayoutRouteChildren = {
   sidebarPageRoute: sidebarPageRoute,
+  sidebarAgentsPageRoute: sidebarAgentsPageRoute,
   sidebarTestAgentPageRoute: sidebarTestAgentPageRoute,
 }
 

@@ -41,6 +41,12 @@ export type AgentDetail = AgentDraft & {
   versions: AgentVersionSummary[]
 }
 
+export type DuplicateAgentResponse = AgentDraft
+
+export type DeleteAgentResponse = {
+  id: string
+}
+
 export type CreateAgentFormInput = z.infer<typeof createAgentFormSchema>
 export type CreateAgentInput = z.infer<typeof createAgentInputSchema>
 export type UpdateAgentInput = z.infer<typeof updateAgentInputSchema>
