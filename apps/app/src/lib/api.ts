@@ -1,17 +1,17 @@
 import { env } from "@/lib/env"
 
-type RequestOptions = {
+type RequestOptions<TBody = never> = {
   headers?: HeadersInit
-  body?: unknown
+  body?: TBody
 }
 
-async function request<T>(
+async function request<TResponse, TBody = never>(
   method: string,
   path: string,
-  options?: RequestOptions
-): Promise<T> {
+  options?: RequestOptions<TBody>
+): Promise<TResponse> {
   const headers = new Headers(options?.headers)
-  if (options?.body) {
+  if (options?.body !== undefined) {
     headers.set("Content-Type", "application/json")
   }
 
@@ -29,23 +29,23 @@ async function request<T>(
     throw new Error(body.error || body.message || response.status)
   }
 
-  return body as T
+  return body as TResponse
 }
 
 export const api = {
-  get<T>(path: string, options?: RequestOptions) {
-    return request<T>("GET", path, options)
+  get<TResponse>(path: string, options?: Omit<RequestOptions, "body">) {
+    return request<TResponse>("GET", path, options)
   },
-  post<T>(path: string, options?: RequestOptions) {
-    return request<T>("POST", path, options)
+  post<TResponse, TBody>(path: string, options: RequestOptions<TBody>) {
+    return request<TResponse, TBody>("POST", path, options)
   },
-  put<T>(path: string, options?: RequestOptions) {
-    return request<T>("PUT", path, options)
+  put<TResponse, TBody>(path: string, options: RequestOptions<TBody>) {
+    return request<TResponse, TBody>("PUT", path, options)
   },
-  patch<T>(path: string, options?: RequestOptions) {
-    return request<T>("PATCH", path, options)
+  patch<TResponse, TBody>(path: string, options: RequestOptions<TBody>) {
+    return request<TResponse, TBody>("PATCH", path, options)
   },
-  delete<T>(path: string, options?: RequestOptions) {
-    return request<T>("DELETE", path, options)
+  delete<TResponse>(path: string, options?: Omit<RequestOptions, "body">) {
+    return request<TResponse>("DELETE", path, options)
   },
 }
