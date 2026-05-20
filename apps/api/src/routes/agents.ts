@@ -3,7 +3,9 @@ import { eq } from "drizzle-orm"
 import { Hono } from "hono"
 import { db } from "@workspace/db/client"
 import { agentsTable, agentVersionsTable } from "@workspace/db/db/schema"
+import type { AgentConfig } from "@workspace/shared/agent-config/types"
 import {
+  agentConfigInputSchema,
   agentIdParamsSchema,
   agentVersionParamsSchema,
   createAgentInputSchema,
@@ -55,6 +57,30 @@ agentRoutes.post("/", zValidator("json", createAgentInputSchema), async (c) => {
     return c.json({ error: "Failed to create agent" }, 500)
   }
 })
+
+agentRoutes.post(
+  "/config",
+  zValidator("json", agentConfigInputSchema),
+  async (c) => {
+    try {
+      const payload = c.req.valid("json")
+
+      const agent = await db.query.agentsTable.findFirst({
+        where: {
+          id: payload.agentId,
+        },
+      })
+
+      if (!agent) {
+        return c.json({ error: "Agent not found" }, 404)
+      }
+
+      return c.json(agent.draftConfig satisfies AgentConfig)
+    } catch {
+      return c.json({ error: "Failed to resolve agent config" }, 500)
+    }
+  }
+)
 
 agentRoutes.post(
   "/:id/duplicate",

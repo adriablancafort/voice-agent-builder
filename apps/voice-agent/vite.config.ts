@@ -1,3 +1,4 @@
+import path from "path"
 import { defineConfig } from "vite"
 
 export default defineConfig({
@@ -10,6 +11,11 @@ export default defineConfig({
       output: {
         entryFileNames: "main.js",
       },
+    },
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
     },
   },
 })

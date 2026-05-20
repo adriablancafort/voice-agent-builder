@@ -4,8 +4,6 @@
   "private": true,
   "scripts": {
     "build": "vite build",
-    "test": "vitest --run",
-    "test:watch": "vitest",
     "dev": "pnpm run build && node dist/main.js dev",
     "download-files": "pnpm run build && node dist/main.js download-files",
     "start": "node dist/main.js start",
@@ -15,6 +13,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@workspace/shared": "workspace:*",
     "@livekit/agents": "^1.4.1",
     "@livekit/agents-plugin-livekit": "^1.4.1",
     "@livekit/agents-plugin-silero": "^1.4.1",
@@ -26,7 +25,6 @@
     "@types/node": "^22.19.17",
     "jiti": "^2.6.1",
     "typescript": "^5.9.3",
-    "vite": "^7.3.2",
-    "vitest": "^4.1.4"
+    "vite": "^7.3.2"
   }
 }

@@ -1,6 +1,7 @@
 import type { z } from "zod"
 import type { AgentConfig } from "../agent-config/types"
 import type {
+  agentConfigInputSchema,
   createAgentFormSchema,
   createAgentInputSchema,
   publishAgentFormSchema,
@@ -53,3 +54,4 @@ export type CreateAgentInput = z.infer<typeof createAgentInputSchema>
 export type UpdateAgentInput = z.infer<typeof updateAgentInputSchema>
 export type PublishAgentFormInput = z.infer<typeof publishAgentFormSchema>
 export type PublishAgentInput = z.infer<typeof publishAgentInputSchema>
+export type AgentConfigInput = z.infer<typeof agentConfigInputSchema>

@@ -39,3 +39,7 @@ export const publishAgentFormSchema = z.object({
   name: z.union([agentNameSchema, z.literal("")]).optional(),
   description: z.string().trim().optional().or(z.literal("")),
 })
+
+export const agentConfigInputSchema = z.object({
+  agentId: z.uuid(),
+})
