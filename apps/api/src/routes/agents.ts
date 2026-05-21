@@ -1,4 +1,3 @@
-import { zValidator } from "@hono/zod-validator"
 import { eq } from "drizzle-orm"
 import { Hono } from "hono"
 import { db } from "@workspace/db/client"
@@ -19,6 +18,7 @@ import type {
   AgentVersionDetail,
   AgentVersionSummary,
 } from "@workspace/shared/agents/types"
+import { validator } from "@/lib/validator"
 
 export const agentRoutes = new Hono()
 
@@ -39,7 +39,7 @@ agentRoutes.get("/", async (c) => {
   }
 })
 
-agentRoutes.post("/", zValidator("json", createAgentInputSchema), async (c) => {
+agentRoutes.post("/", validator("json", createAgentInputSchema), async (c) => {
   try {
     const payload = c.req.valid("json")
 
@@ -60,7 +60,7 @@ agentRoutes.post("/", zValidator("json", createAgentInputSchema), async (c) => {
 
 agentRoutes.post(
   "/config",
-  zValidator("json", agentConfigInputSchema),
+  validator("json", agentConfigInputSchema),
   async (c) => {
     try {
       const payload = c.req.valid("json")
@@ -84,7 +84,7 @@ agentRoutes.post(
 
 agentRoutes.post(
   "/:id/duplicate",
-  zValidator("param", agentIdParamsSchema),
+  validator("param", agentIdParamsSchema),
   async (c) => {
     const { id: agentId } = c.req.valid("param")
 
@@ -115,7 +115,7 @@ agentRoutes.post(
   }
 )
 
-agentRoutes.get("/:id", zValidator("param", agentIdParamsSchema), async (c) => {
+agentRoutes.get("/:id", validator("param", agentIdParamsSchema), async (c) => {
   const { id: agentId } = c.req.valid("param")
 
   try {
@@ -148,8 +148,8 @@ agentRoutes.get("/:id", zValidator("param", agentIdParamsSchema), async (c) => {
 
 agentRoutes.patch(
   "/:id",
-  zValidator("param", agentIdParamsSchema),
-  zValidator("json", updateAgentInputSchema),
+  validator("param", agentIdParamsSchema),
+  validator("json", updateAgentInputSchema),
   async (c) => {
     const { id: agentId } = c.req.valid("param")
 
@@ -179,7 +179,7 @@ agentRoutes.patch(
 
 agentRoutes.delete(
   "/:id",
-  zValidator("param", agentIdParamsSchema),
+  validator("param", agentIdParamsSchema),
   async (c) => {
     const { id: agentId } = c.req.valid("param")
 
@@ -204,7 +204,7 @@ agentRoutes.delete(
 
 agentRoutes.get(
   "/:id/versions/:number",
-  zValidator("param", agentVersionParamsSchema),
+  validator("param", agentVersionParamsSchema),
   async (c) => {
     const { id: agentId, number: versionNumber } = c.req.valid("param")
 
@@ -232,8 +232,8 @@ agentRoutes.get(
 
 agentRoutes.post(
   "/:id/publish",
-  zValidator("param", agentIdParamsSchema),
-  zValidator("json", publishAgentInputSchema),
+  validator("param", agentIdParamsSchema),
+  validator("json", publishAgentInputSchema),
   async (c) => {
     const { id: agentId } = c.req.valid("param")
 
