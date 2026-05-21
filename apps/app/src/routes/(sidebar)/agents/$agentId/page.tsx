@@ -10,6 +10,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb"
+import { InlineEditableField } from "@workspace/ui/components/inline-editable-field"
 import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { PublishAgentForm } from "@/components/agents/publish-agent-form"
@@ -34,6 +35,7 @@ export const Route = createFileRoute("/(sidebar)/agents/$agentId/")({
 
 function Header() {
   const name = useAgentStore((state) => state.name)
+  const setName = useAgentStore((state) => state.setName)
 
   return (
     <header className="flex h-18 shrink-0 items-center gap-2 px-5">
@@ -51,7 +53,13 @@ function Header() {
           </BreadcrumbItem>
           <BreadcrumbSeparator className="hidden md:block" />
           <BreadcrumbItem>
-            <BreadcrumbPage>{name}</BreadcrumbPage>
+            <BreadcrumbPage>
+              <InlineEditableField
+                value={name}
+                onChange={setName}
+                placeholder="Untitled agent"
+              />
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
