@@ -17,6 +17,7 @@ import { PublishAgentForm } from "@/components/agents/publish-agent-form"
 import { SaveAgentButton } from "@/components/agents/save-agent-button"
 import { TestAgentPanel } from "@/components/agents/test-agent-panel"
 import Canvas from "@/components/flow/canvas"
+import { FlowSidePanel } from "@/components/flow/sidepanel"
 import { api } from "@/lib/api"
 import { useAgentStore } from "@/stores/agent"
 
@@ -85,6 +86,7 @@ function Page() {
     <>
       <Header />
       <Canvas />
+      <FlowSidePanel />
     </>
   )
 }
