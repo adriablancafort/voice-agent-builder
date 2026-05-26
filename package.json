@@ -4,7 +4,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "agent:deploy": "lk agent deploy --skip-sdk-check --config apps/voice-agent/livekit.toml --secrets-file apps/voice-agent/.env"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -181,6 +181,9 @@ importers:
       dotenv:
         specifier: ^17.4.1
         version: 17.4.2
+      livekit-server-sdk:
+        specifier: ^2.15.3
+        version: 2.15.3
       zod:
         specifier: ^4.4.3
         version: 4.4.3
