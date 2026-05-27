@@ -20,6 +20,12 @@ export function InlineEditableField({
   }, [value])
 
   function save() {
+    if (draft.trim() === "") {
+      setDraft(value)
+      setEditing(false)
+      return
+    }
+
     onChange(draft)
     setEditing(false)
   }
