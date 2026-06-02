@@ -8,18 +8,18 @@
     "agent:deploy": "lk agent deploy --skip-sdk-check --config apps/voice-agent/livekit.toml --secrets-file apps/voice-agent/.env"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@tanstack/eslint-plugin-query": "^5.100.10",
-    "@tanstack/eslint-plugin-router": "^1.162.0",
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-    "eslint": "^10.4.0",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.26",
-    "globals": "^17.6.0",
-    "prettier": "^3.8.1",
-    "prettier-plugin-tailwindcss": "^0.7.2",
-    "typescript": "5.9.3",
-    "typescript-eslint": "^8.59.3",
-    "zod": "^4.4.3"
+    "@eslint/js": "catalog:",
+    "@tanstack/eslint-plugin-query": "catalog:",
+    "@tanstack/eslint-plugin-router": "catalog:",
+    "@trivago/prettier-plugin-sort-imports": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "eslint-plugin-react-refresh": "catalog:",
+    "globals": "catalog:",
+    "prettier": "catalog:",
+    "prettier-plugin-tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:",
+    "zod": "catalog:"
   }
 }

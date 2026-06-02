@@ -16,15 +16,15 @@
     "@hono/zod-validator": "^0.8.0",
     "@workspace/db": "workspace:*",
     "@workspace/shared": "workspace:*",
-    "dotenv": "^17.4.2",
-    "drizzle-orm": "1.0.0-beta.22",
+    "dotenv": "catalog:",
+    "drizzle-orm": "catalog:",
     "hono": "^4.12.19",
-    "livekit-server-sdk": "^2.15.3"
+    "livekit-server-sdk": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^20.11.17",
+    "@types/node": "catalog:",
     "rolldown": "^1.0.1",
-    "tsx": "^4.7.1",
-    "typescript": "^5.8.3"
+    "tsx": "catalog:",
+    "typescript": "catalog:"
   }
 }

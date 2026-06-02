@@ -13,29 +13,29 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@livekit/components-react": "^2.9.21",
+    "@livekit/components-react": "catalog:",
     "@tanstack/react-query": "^5.100.10",
     "@tanstack/react-router": "^1.170.2",
     "@tanstack/react-table": "^8.21.3",
     "@workspace/shared": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@xyflow/react": "^12.10.2",
-    "livekit-client": "^2.19.0",
-    "lucide-react": "^1.16.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "livekit-client": "catalog:",
+    "lucide-react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "react-hook-form": "^7.76.0",
-    "zod": "^4.4.3",
+    "zod": "catalog:",
     "zustand": "^5.0.13"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.1.18",
+    "@tailwindcss/vite": "catalog:",
     "@tanstack/router-plugin": "^1.168.3",
-    "@types/node": "^25.1.0",
-    "@types/react": "^19.2.10",
-    "@types/react-dom": "^19.2.3",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^5.1.1",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.2"
+    "typescript": "catalog:",
+    "vite": "catalog:"
   }
 }

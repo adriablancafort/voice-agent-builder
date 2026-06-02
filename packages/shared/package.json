@@ -12,9 +12,9 @@
     "./*": "./src/*.ts"
   },
   "devDependencies": {
-    "typescript": "^6.0.3"
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "zod": "^4.4.3"
+    "zod": "catalog:"
   }
 }

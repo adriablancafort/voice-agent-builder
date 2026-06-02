@@ -20,13 +20,13 @@
   },
   "dependencies": {
     "@workspace/shared": "workspace:*",
-    "dotenv": "^17.4.2",
-    "drizzle-orm": "1.0.0-beta.22",
+    "dotenv": "catalog:",
+    "drizzle-orm": "catalog:",
     "pg": "^8.20.0"
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",
     "drizzle-kit": "1.0.0-beta.22",
-    "tsx": "^4.7.1"
+    "tsx": "catalog:"
   }
 }

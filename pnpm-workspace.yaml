@@ -1,3 +1,32 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - 'apps/*'
+  - 'packages/*'
+
+catalog:
+  '@eslint/js': 10.0.1
+  '@livekit/components-react': 2.9.21
+  '@tailwindcss/vite': 4.1.18
+  '@tanstack/eslint-plugin-query': 5.100.10
+  '@tanstack/eslint-plugin-router': 1.162.0
+  '@trivago/prettier-plugin-sort-imports': 5.2.2
+  '@types/node': 25.1.0
+  '@types/react': 19.2.10
+  '@types/react-dom': 19.2.3
+  dotenv: 17.4.2
+  drizzle-orm: 1.0.0-beta.22
+  eslint: 10.4.0
+  eslint-plugin-react-hooks: 7.0.1
+  eslint-plugin-react-refresh: 0.4.26
+  globals: 17.6.0
+  livekit-client: 2.19.0
+  livekit-server-sdk: 2.15.3
+  lucide-react: 1.16.0
+  prettier: 3.8.1
+  prettier-plugin-tailwindcss: 0.7.2
+  react: 19.2.4
+  react-dom: 19.2.4
+  tsx: 4.7.1
+  typescript: 5.9.3
+  typescript-eslint: 8.59.3
+  vite: 7.3.2
+  zod: 4.4.3
