@@ -50,19 +50,61 @@ export const agentVersionsTable = pgTable(
   })
 )
 
+export const phoneNumbersTable = pgTable(
+  "phone_numbers",
+  {
+    id: uuid().primaryKey(),
+    number: varchar({ length: 16 }).notNull(),
+    agentId: uuid("agent_id").references(() => agentsTable.id, {
+      onDelete: "set null",
+    }),
+    agentVersionId: uuid("agent_version_id").references(
+      () => agentVersionsTable.id,
+      { onDelete: "set null" }
+    ),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => ({
+    uniquePhoneNumber: unique("unique_phone_number").on(table.number),
+  })
+)
+
 export const relations = defineRelations(
-  { agentsTable, agentVersionsTable },
+  { agentsTable, agentVersionsTable, phoneNumbersTable },
   (r) => ({
     agentsTable: {
       versions: r.many.agentVersionsTable({
         from: r.agentsTable.id,
         to: r.agentVersionsTable.agentId,
       }),
+      phoneNumbers: r.many.phoneNumbersTable({
+        from: r.agentsTable.id,
+        to: r.phoneNumbersTable.agentId,
+      }),
     },
     agentVersionsTable: {
       agent: r.one.agentsTable({
         from: r.agentVersionsTable.agentId,
         to: r.agentsTable.id,
+      }),
+      phoneNumbers: r.many.phoneNumbersTable({
+        from: r.agentVersionsTable.id,
+        to: r.phoneNumbersTable.agentVersionId,
+      }),
+    },
+    phoneNumbersTable: {
+      agent: r.one.agentsTable({
+        from: r.phoneNumbersTable.agentId,
+        to: r.agentsTable.id,
+      }),
+      agentVersion: r.one.agentVersionsTable({
+        from: r.phoneNumbersTable.agentVersionId,
+        to: r.agentVersionsTable.id,
       }),
     },
   })
