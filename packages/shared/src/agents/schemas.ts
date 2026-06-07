@@ -41,6 +41,11 @@ export const publishAgentFormSchema = z.object({
   description: z.string().optional(),
 })
 
-export const agentConfigInputSchema = z.object({
+export const webrtcAgentConfigInputSchema = z.object({
   agentId: z.uuid(),
+  agentVersionId: z.uuid().optional(),
+})
+
+export const sipInboundAgentConfigInputSchema = z.object({
+  number: z.e164(),
 })

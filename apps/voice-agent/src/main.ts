@@ -11,7 +11,6 @@ import * as silero from "@livekit/agents-plugin-silero"
 import { audioEnhancement } from "@livekit/plugins-ai-coustics"
 
 import type { TurnDetectionConfig } from "@workspace/shared/agent-config/types"
-import type { AgentConfigInput } from "@workspace/shared/agents/types"
 import { FlowAgent } from "@/flow/agent"
 import { buildFlowGraph } from "@/flow/builder"
 import { loadAgentConfig } from "@/flow/loader"
@@ -37,17 +36,7 @@ export default defineAgent<ProcessUserData>({
   entry: async (ctx) => {
     await ctx.connect()
     const participant = await ctx.waitForParticipant()
-    const agentId = participant.attributes?.agent_id
-
-    if (!agentId) {
-      throw new Error("agent_id is required")
-    }
-
-    const resolveInput: AgentConfigInput = {
-      agentId,
-    }
-
-    const agentConfig = await loadAgentConfig(resolveInput)
+    const agentConfig = await loadAgentConfig(participant.attributes)
     const flowGraph = buildFlowGraph(agentConfig)
 
     const session = new voice.AgentSession({

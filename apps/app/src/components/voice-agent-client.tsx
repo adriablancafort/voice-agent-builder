@@ -26,12 +26,18 @@ function AgentAudioVisualizer() {
 
 type VoiceAgentClientProps = {
   agentId: string
+  agentVersionId?: string
 }
 
-export function VoiceAgentClient({ agentId }: VoiceAgentClientProps) {
+export function VoiceAgentClient({
+  agentId,
+  agentVersionId,
+}: VoiceAgentClientProps) {
   const session = useSession(tokenSource, {
     participantAttributes: {
+      channel: "webrtc",
       agent_id: agentId,
+      agent_version_id: agentVersionId ?? "",
     },
   })
 
