@@ -38,6 +38,8 @@ type AgentVersionBase = {
 
 export type AgentVersionSummary = AgentVersionBase
 
+export type AgentVersionsList = AgentVersionSummary[]
+
 export type AgentVersionDetail = AgentVersionBase & {
   config: AgentConfig
 }

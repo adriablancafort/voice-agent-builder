@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as sidebarLayoutRouteImport } from './routes/(sidebar)/layout'
 import { Route as sidebarPageRouteImport } from './routes/(sidebar)/page'
+import { Route as sidebarPhoneNumbersPageRouteImport } from './routes/(sidebar)/phone-numbers/page'
 import { Route as sidebarAgentsPageRouteImport } from './routes/(sidebar)/agents/page'
 import { Route as sidebarAgentsAgentIdPageRouteImport } from './routes/(sidebar)/agents/$agentId/page'
 
@@ -21,6 +22,11 @@ const sidebarLayoutRoute = sidebarLayoutRouteImport.update({
 const sidebarPageRoute = sidebarPageRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => sidebarLayoutRoute,
+} as any)
+const sidebarPhoneNumbersPageRoute = sidebarPhoneNumbersPageRouteImport.update({
+  id: '/phone-numbers/',
+  path: '/phone-numbers/',
   getParentRoute: () => sidebarLayoutRoute,
 } as any)
 const sidebarAgentsPageRoute = sidebarAgentsPageRouteImport.update({
@@ -38,11 +44,13 @@ const sidebarAgentsAgentIdPageRoute =
 export interface FileRoutesByFullPath {
   '/': typeof sidebarPageRoute
   '/agents/': typeof sidebarAgentsPageRoute
+  '/phone-numbers/': typeof sidebarPhoneNumbersPageRoute
   '/agents/$agentId/': typeof sidebarAgentsAgentIdPageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof sidebarPageRoute
   '/agents': typeof sidebarAgentsPageRoute
+  '/phone-numbers': typeof sidebarPhoneNumbersPageRoute
   '/agents/$agentId': typeof sidebarAgentsAgentIdPageRoute
 }
 export interface FileRoutesById {
@@ -50,18 +58,20 @@ export interface FileRoutesById {
   '/(sidebar)': typeof sidebarLayoutRouteWithChildren
   '/(sidebar)/': typeof sidebarPageRoute
   '/(sidebar)/agents/': typeof sidebarAgentsPageRoute
+  '/(sidebar)/phone-numbers/': typeof sidebarPhoneNumbersPageRoute
   '/(sidebar)/agents/$agentId/': typeof sidebarAgentsAgentIdPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/agents/' | '/agents/$agentId/'
+  fullPaths: '/' | '/agents/' | '/phone-numbers/' | '/agents/$agentId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/agents' | '/agents/$agentId'
+  to: '/' | '/agents' | '/phone-numbers' | '/agents/$agentId'
   id:
     | '__root__'
     | '/(sidebar)'
     | '/(sidebar)/'
     | '/(sidebar)/agents/'
+    | '/(sidebar)/phone-numbers/'
     | '/(sidebar)/agents/$agentId/'
   fileRoutesById: FileRoutesById
 }
@@ -85,6 +95,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof sidebarPageRouteImport
       parentRoute: typeof sidebarLayoutRoute
     }
+    '/(sidebar)/phone-numbers/': {
+      id: '/(sidebar)/phone-numbers/'
+      path: '/phone-numbers'
+      fullPath: '/phone-numbers/'
+      preLoaderRoute: typeof sidebarPhoneNumbersPageRouteImport
+      parentRoute: typeof sidebarLayoutRoute
+    }
     '/(sidebar)/agents/': {
       id: '/(sidebar)/agents/'
       path: '/agents'
@@ -105,12 +122,14 @@ declare module '@tanstack/react-router' {
 interface sidebarLayoutRouteChildren {
   sidebarPageRoute: typeof sidebarPageRoute
   sidebarAgentsPageRoute: typeof sidebarAgentsPageRoute
+  sidebarPhoneNumbersPageRoute: typeof sidebarPhoneNumbersPageRoute
   sidebarAgentsAgentIdPageRoute: typeof sidebarAgentsAgentIdPageRoute
 }
 
 const sidebarLayoutRouteChildren: sidebarLayoutRouteChildren = {
   sidebarPageRoute: sidebarPageRoute,
   sidebarAgentsPageRoute: sidebarAgentsPageRoute,
+  sidebarPhoneNumbersPageRoute: sidebarPhoneNumbersPageRoute,
   sidebarAgentsAgentIdPageRoute: sidebarAgentsAgentIdPageRoute,
 }
 

@@ -1,6 +1,7 @@
 import {
   AudioLinesIcon,
   GalleryVerticalEndIcon,
+  PhoneIcon,
   TerminalIcon,
   WorkflowIcon,
 } from "lucide-react"
@@ -46,6 +47,11 @@ const data = {
       title: "Agents",
       url: "/agents",
       icon: <WorkflowIcon />,
+    },
+    {
+      title: "Phone numbers",
+      url: "/phone-numbers",
+      icon: <PhoneIcon />,
     },
   ],
 }

@@ -19,6 +19,7 @@ import type {
   AgentListItem,
   AgentVersionDetail,
   AgentVersionSummary,
+  AgentVersionsList,
 } from "@workspace/shared/agents/types"
 import { validator } from "@/lib/validator"
 
@@ -291,6 +292,44 @@ agentRoutes.delete(
       return c.json(deletedAgent)
     } catch {
       return c.json({ error: "Failed to delete agent" }, 500)
+    }
+  }
+)
+
+agentRoutes.get(
+  "/:id/versions",
+  validator("param", agentIdParamsSchema),
+  async (c) => {
+    const { id: agentId } = c.req.valid("param")
+
+    try {
+      const agent = await db.query.agentsTable.findFirst({
+        where: {
+          id: agentId,
+        },
+        columns: {
+          id: true,
+        },
+        with: {
+          versions: {
+            columns: {
+              agentId: false,
+              config: false,
+            },
+            orderBy: {
+              number: "desc",
+            },
+          },
+        },
+      })
+
+      if (!agent) {
+        return c.json({ error: "Agent not found" }, 404)
+      }
+
+      return c.json(agent.versions satisfies AgentVersionsList)
+    } catch {
+      return c.json({ error: "Failed to load agent versions" }, 500)
     }
   }
 )
