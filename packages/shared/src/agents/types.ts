@@ -16,6 +16,7 @@ export type AgentListItem = {
   name: string
   createdAt: Date
   updatedAt: Date
+  phoneNumbers: Array<{ number: string }>
 }
 
 export type AgentDraft = {

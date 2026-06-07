@@ -33,14 +33,15 @@ const columns: ColumnDef<AgentListItem>[] = [
     cell: ({ row }) => row.original.name,
   },
   {
+    id: "phoneNumbers",
+    header: "Phone number",
+    cell: ({ row }) =>
+      row.original.phoneNumbers.map((p) => p.number).join(", "),
+  },
+  {
     accessorKey: "updatedAt",
     header: "Updated",
     cell: ({ row }) => dateFormatter.format(new Date(row.original.updatedAt)),
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created",
-    cell: ({ row }) => dateFormatter.format(new Date(row.original.createdAt)),
   },
   {
     id: "actions",

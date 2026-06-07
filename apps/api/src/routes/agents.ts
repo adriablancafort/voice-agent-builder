@@ -30,6 +30,13 @@ agentRoutes.get("/", async (c) => {
       columns: {
         draftConfig: false,
       },
+      with: {
+        phoneNumbers: {
+          columns: {
+            number: true,
+          },
+        },
+      },
       orderBy: {
         updatedAt: "desc",
       },
