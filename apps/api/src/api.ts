@@ -4,6 +4,7 @@ import { logger } from "hono/logger"
 
 import { env } from "@/lib/env"
 import { agentRoutes } from "@/routes/agents"
+import { phoneNumberRoutes } from "@/routes/phone-numbers"
 import { tokenRoutes } from "@/routes/token"
 
 const api = new Hono()
@@ -21,6 +22,7 @@ if (env.NODE_ENV !== "production") {
 }
 
 api.route("/api/agents", agentRoutes)
+api.route("/api/phone-numbers", phoneNumberRoutes)
 api.route("/api/token", tokenRoutes)
 
 export default api
