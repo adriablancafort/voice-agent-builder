@@ -80,6 +80,7 @@ function Page() {
   const { agentId } = Route.useParams()
   const setAgent = useAgentStore((state) => state.setAgent)
   const { data: agent } = useSuspenseQuery(queryOptions(agentId))
+  const name = useAgentStore((state) => state.name)
 
   useEffect(() => {
     setAgent(agent)
@@ -87,6 +88,7 @@ function Page() {
 
   return (
     <>
+      <title>{name}</title>
       <Header />
       <Canvas />
       <FlowSidePanel />

@@ -17,21 +17,24 @@ export const Route = createFileRoute("/(authorized)/(sidebar)/$/")({
 
 function Page() {
   return (
-    <Empty className="mx-auto max-w-md">
-      <EmptyHeader>
-        <EmptyMedia variant="icon">
-          <Search />
-        </EmptyMedia>
-        <EmptyTitle className="text-xl">Page not found</EmptyTitle>
-        <EmptyDescription>
-          The page you're looking for doesn't exist or was moved
-        </EmptyDescription>
-      </EmptyHeader>
-      <EmptyContent>
-        <Button variant="secondary" render={<Link to="/" />}>
-          Return Home
-        </Button>
-      </EmptyContent>
-    </Empty>
+    <>
+      <title>Page not found</title>
+      <Empty className="mx-auto max-w-md">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Search />
+          </EmptyMedia>
+          <EmptyTitle className="text-xl">Page not found</EmptyTitle>
+          <EmptyDescription>
+            The page you're looking for doesn't exist or was moved
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button variant="secondary" render={<Link to="/" />}>
+            Return Home
+          </Button>
+        </EmptyContent>
+      </Empty>
+    </>
   )
 }

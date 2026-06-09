@@ -54,6 +54,7 @@ function Page() {
 
   return (
     <>
+      <title>Agents</title>
       <Header />
       <div className="p-5 pt-0">
         <AgentsDataTable data={agents} />

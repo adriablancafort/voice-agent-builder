@@ -64,64 +64,70 @@ function Page() {
   })
 
   return (
-    <div className="flex h-screen w-full items-center justify-center p-6">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-xl">Reset password</CardTitle>
-          <CardDescription>
-            Enter your email below to receive a password reset link
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={form.handleSubmit((values) =>
-              resetPasswordMutation.mutate(values)
-            )}
-            noValidate
-          >
-            <FieldGroup>
-              <Controller
-                name="email"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                    <Input
-                      {...field}
-                      id={field.name}
-                      type="email"
-                      placeholder="mail@example.com"
-                      autoComplete="email"
-                      aria-invalid={fieldState.invalid}
-                      disabled={resetPasswordMutation.isPending}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
+    <>
+      <title>Reset password</title>
+      <div className="flex h-screen w-full items-center justify-center p-6">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-xl">Reset password</CardTitle>
+            <CardDescription>
+              Enter your email below to receive a password reset link
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form
+              onSubmit={form.handleSubmit((values) =>
+                resetPasswordMutation.mutate(values)
+              )}
+              noValidate
+            >
+              <FieldGroup>
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        type="email"
+                        placeholder="mail@example.com"
+                        autoComplete="email"
+                        aria-invalid={fieldState.invalid}
+                        disabled={resetPasswordMutation.isPending}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
 
-              <Button type="submit" disabled={resetPasswordMutation.isPending}>
-                {resetPasswordMutation.isPending ? (
-                  <Spinner className="mx-12" />
-                ) : (
-                  "Send reset link"
-                )}
-              </Button>
+                <Button
+                  type="submit"
+                  disabled={resetPasswordMutation.isPending}
+                >
+                  {resetPasswordMutation.isPending ? (
+                    <Spinner className="mx-12" />
+                  ) : (
+                    "Send reset link"
+                  )}
+                </Button>
 
-              <div className="text-center text-sm">
-                <span className="text-muted-foreground">
-                  Already remember it?{" "}
-                </span>
-                <Link to="/signin" className="underline">
-                  Sign in
-                </Link>
-              </div>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+                <div className="text-center text-sm">
+                  <span className="text-muted-foreground">
+                    Already remember it?{" "}
+                  </span>
+                  <Link to="/signin" className="underline">
+                    Sign in
+                  </Link>
+                </div>
+              </FieldGroup>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   )
 }

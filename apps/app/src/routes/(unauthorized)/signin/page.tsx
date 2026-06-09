@@ -69,89 +69,92 @@ function Page() {
   })
 
   return (
-    <div className="flex h-screen w-full items-center justify-center p-6">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-xl">Sign in</CardTitle>
-          <CardDescription>
-            Enter your email and password below to sign in
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={form.handleSubmit((values) =>
-              signInMutation.mutate(values)
-            )}
-            noValidate
-          >
-            <FieldGroup>
-              <Controller
-                name="email"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                    <Input
-                      {...field}
-                      id={field.name}
-                      type="email"
-                      placeholder="mail@example.com"
-                      autoComplete="email"
-                      aria-invalid={fieldState.invalid}
-                      disabled={signInMutation.isPending}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
+    <>
+      <title>Sign in</title>
+      <div className="flex h-screen w-full items-center justify-center p-6">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-xl">Sign in</CardTitle>
+            <CardDescription>
+              Enter your email and password below to sign in
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form
+              onSubmit={form.handleSubmit((values) =>
+                signInMutation.mutate(values)
+              )}
+              noValidate
+            >
+              <FieldGroup>
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        type="email"
+                        placeholder="mail@example.com"
+                        autoComplete="email"
+                        aria-invalid={fieldState.invalid}
+                        disabled={signInMutation.isPending}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
 
-              <Controller
-                name="password"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <div className="flex items-center">
-                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                      <Link
-                        to="/reset-password"
-                        className="ml-auto inline-block text-sm underline"
-                      >
-                        Forgot your password?
-                      </Link>
-                    </div>
-                    <Input
-                      {...field}
-                      id={field.name}
-                      type="password"
-                      autoComplete="current-password"
-                      aria-invalid={fieldState.invalid}
-                      disabled={signInMutation.isPending}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
+                <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <div className="flex items-center">
+                        <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                        <Link
+                          to="/reset-password"
+                          className="ml-auto inline-block text-sm underline"
+                        >
+                          Forgot your password?
+                        </Link>
+                      </div>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        type="password"
+                        autoComplete="current-password"
+                        aria-invalid={fieldState.invalid}
+                        disabled={signInMutation.isPending}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
 
-              <Button type="submit" disabled={signInMutation.isPending}>
-                {signInMutation.isPending ? <Spinner /> : "Sign in"}
-              </Button>
+                <Button type="submit" disabled={signInMutation.isPending}>
+                  {signInMutation.isPending ? <Spinner /> : "Sign in"}
+                </Button>
 
-              <div className="text-center text-sm">
-                <span className="text-muted-foreground">
-                  Don't have an account?{" "}
-                </span>
-                <Link to="/signup" className="underline">
-                  Sign up
-                </Link>
-              </div>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+                <div className="text-center text-sm">
+                  <span className="text-muted-foreground">
+                    Don't have an account?{" "}
+                  </span>
+                  <Link to="/signup" className="underline">
+                    Sign up
+                  </Link>
+                </div>
+              </FieldGroup>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   )
 }

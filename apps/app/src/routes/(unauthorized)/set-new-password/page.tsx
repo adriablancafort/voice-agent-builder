@@ -91,84 +91,90 @@ function Page() {
   }
 
   return (
-    <div className="flex h-screen w-full items-center justify-center p-6">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-xl">Set new password</CardTitle>
-          <CardDescription>Enter your new password below</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={form.handleSubmit((values) =>
-              setNewPasswordMutation.mutate(values)
-            )}
-            noValidate
-          >
-            <FieldGroup>
-              <Controller
-                name="password"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>New Password</FieldLabel>
-                    <Input
-                      {...field}
-                      id={field.name}
-                      type="password"
-                      autoComplete="new-password"
-                      aria-invalid={fieldState.invalid}
-                      disabled={setNewPasswordMutation.isPending}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
+    <>
+      <title>Set new password</title>
+      <div className="flex h-screen w-full items-center justify-center p-6">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-xl">Set new password</CardTitle>
+            <CardDescription>Enter your new password below</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form
+              onSubmit={form.handleSubmit((values) =>
+                setNewPasswordMutation.mutate(values)
+              )}
+              noValidate
+            >
+              <FieldGroup>
+                <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>New Password</FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        type="password"
+                        autoComplete="new-password"
+                        aria-invalid={fieldState.invalid}
+                        disabled={setNewPasswordMutation.isPending}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
 
-              <Controller
-                name="confirmPassword"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      Confirm Password
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id={field.name}
-                      type="password"
-                      autoComplete="new-password"
-                      aria-invalid={fieldState.invalid}
-                      disabled={setNewPasswordMutation.isPending}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
+                <Controller
+                  name="confirmPassword"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        Confirm Password
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        type="password"
+                        autoComplete="new-password"
+                        aria-invalid={fieldState.invalid}
+                        disabled={setNewPasswordMutation.isPending}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
 
-              <Button type="submit" disabled={setNewPasswordMutation.isPending}>
-                {setNewPasswordMutation.isPending ? (
-                  <Spinner className="mx-12" />
-                ) : (
-                  "Set new password"
-                )}
-              </Button>
+                <Button
+                  type="submit"
+                  disabled={setNewPasswordMutation.isPending}
+                >
+                  {setNewPasswordMutation.isPending ? (
+                    <Spinner className="mx-12" />
+                  ) : (
+                    "Set new password"
+                  )}
+                </Button>
 
-              <div className="text-center text-sm">
-                <span className="text-muted-foreground">
-                  Already remember it?{" "}
-                </span>
-                <Link to="/signin" className="underline">
-                  Sign in
-                </Link>
-              </div>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+                <div className="text-center text-sm">
+                  <span className="text-muted-foreground">
+                    Already remember it?{" "}
+                  </span>
+                  <Link to="/signin" className="underline">
+                    Sign in
+                  </Link>
+                </div>
+              </FieldGroup>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   )
 }
