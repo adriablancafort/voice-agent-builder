@@ -15,6 +15,7 @@
     "@hono/zod-validator": "^0.8.0",
     "@workspace/db": "workspace:*",
     "@workspace/shared": "workspace:*",
+    "better-auth": "catalog:",
     "dotenv": "catalog:",
     "drizzle-orm": "catalog:",
     "hono": "^4.12.19",

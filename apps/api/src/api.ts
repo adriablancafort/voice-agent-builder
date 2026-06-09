@@ -2,6 +2,7 @@ import { Hono } from "hono"
 import { cors } from "hono/cors"
 import { logger } from "hono/logger"
 
+import { auth } from "@/lib/auth"
 import { env } from "@/lib/env"
 import { agentRoutes } from "@/routes/agents"
 import { phoneNumberRoutes } from "@/routes/phone-numbers"
@@ -20,6 +21,10 @@ api.use(
 if (env.NODE_ENV !== "production") {
   api.use(logger())
 }
+
+api.on(["POST", "GET"], "/api/auth/*", (c) => {
+  return auth.handler(c.req.raw)
+})
 
 api.route("/api/agents", agentRoutes)
 api.route("/api/phone-numbers", phoneNumberRoutes)
