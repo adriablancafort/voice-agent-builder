@@ -1,11 +1,23 @@
-import { pgTable, timestamp, unique, uuid, varchar } from "drizzle-orm/pg-core"
+import {
+  index,
+  pgTable,
+  text,
+  timestamp,
+  unique,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core"
 
 import { agentsTable, agentVersionsTable } from "@workspace/db/schema/agents"
+import { organization } from "@workspace/db/schema/auth"
 
 export const phoneNumbersTable = pgTable(
   "phone_numbers",
   {
     id: uuid().primaryKey(),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
     number: varchar({ length: 16 }).notNull(),
     agentId: uuid("agent_id").references(() => agentsTable.id, {
       onDelete: "set null",
@@ -21,7 +33,8 @@ export const phoneNumbersTable = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => ({
-    uniquePhoneNumber: unique("unique_phone_number").on(table.number),
-  })
+  (table) => [
+    unique("unique_phone_number").on(table.number),
+    index("phone_numbers_organizationId_idx").on(table.organizationId),
+  ]
 )

@@ -1,7 +1,14 @@
 import { defineRelations } from "drizzle-orm"
 
 import { agentsTable, agentVersionsTable } from "@workspace/db/schema/agents"
-import { account, session, user } from "@workspace/db/schema/auth"
+import {
+  account,
+  invitation,
+  member,
+  organization,
+  session,
+  user,
+} from "@workspace/db/schema/auth"
 import { phoneNumbersTable } from "@workspace/db/schema/phone-numbers"
 
 export const relations = defineRelations(
@@ -12,9 +19,16 @@ export const relations = defineRelations(
     user,
     session,
     account,
+    organization,
+    member,
+    invitation,
   },
   (r) => ({
     agentsTable: {
+      organization: r.one.organization({
+        from: r.agentsTable.organizationId,
+        to: r.organization.id,
+      }),
       versions: r.many.agentVersionsTable({
         from: r.agentsTable.id,
         to: r.agentVersionsTable.agentId,
@@ -35,6 +49,10 @@ export const relations = defineRelations(
       }),
     },
     phoneNumbersTable: {
+      organization: r.one.organization({
+        from: r.phoneNumbersTable.organizationId,
+        to: r.organization.id,
+      }),
       agent: r.one.agentsTable({
         from: r.phoneNumbersTable.agentId,
         to: r.agentsTable.id,
@@ -53,6 +71,10 @@ export const relations = defineRelations(
         from: r.user.id,
         to: r.account.userId,
       }),
+      members: r.many.member({
+        from: r.user.id,
+        to: r.member.userId,
+      }),
     },
     session: {
       user: r.one.user({
@@ -63,6 +85,44 @@ export const relations = defineRelations(
     account: {
       user: r.one.user({
         from: r.account.userId,
+        to: r.user.id,
+      }),
+    },
+    organization: {
+      members: r.many.member({
+        from: r.organization.id,
+        to: r.member.organizationId,
+      }),
+      invitations: r.many.invitation({
+        from: r.organization.id,
+        to: r.invitation.organizationId,
+      }),
+      agents: r.many.agentsTable({
+        from: r.organization.id,
+        to: r.agentsTable.organizationId,
+      }),
+      phoneNumbers: r.many.phoneNumbersTable({
+        from: r.organization.id,
+        to: r.phoneNumbersTable.organizationId,
+      }),
+    },
+    member: {
+      organization: r.one.organization({
+        from: r.member.organizationId,
+        to: r.organization.id,
+      }),
+      user: r.one.user({
+        from: r.member.userId,
+        to: r.user.id,
+      }),
+    },
+    invitation: {
+      organization: r.one.organization({
+        from: r.invitation.organizationId,
+        to: r.organization.id,
+      }),
+      inviter: r.one.user({
+        from: r.invitation.inviterId,
         to: r.user.id,
       }),
     },

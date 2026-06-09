@@ -1,4 +1,5 @@
 import {
+  index,
   integer,
   jsonb,
   pgTable,
@@ -9,19 +10,27 @@ import {
   varchar,
 } from "drizzle-orm/pg-core"
 
+import { organization } from "@workspace/db/schema/auth"
 import type { AgentConfig } from "@workspace/shared/agent-config/types"
 
-export const agentsTable = pgTable("agents", {
-  id: uuid().primaryKey(),
-  name: varchar({ length: 255 }).notNull(),
-  draftConfig: jsonb("draft_config").$type<AgentConfig>().notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" })
-    .defaultNow()
-    .notNull(),
-})
+export const agentsTable = pgTable(
+  "agents",
+  {
+    id: uuid().primaryKey(),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
+    name: varchar({ length: 255 }).notNull(),
+    draftConfig: jsonb("draft_config").$type<AgentConfig>().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [index("agents_organizationId_idx").on(table.organizationId)]
+)
 
 export const agentVersionsTable = pgTable(
   "agent_versions",
