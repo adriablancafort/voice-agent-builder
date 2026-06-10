@@ -54,10 +54,7 @@ export function NavUser() {
     await signOut({
       fetchOptions: {
         onSuccess: async () => {
-          await queryClient.invalidateQueries({
-            queryKey: ["session"],
-            refetchType: "all",
-          })
+          queryClient.clear()
           navigate({ to: "/signin" })
         },
         onError: (ctx) => {

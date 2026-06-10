@@ -30,7 +30,7 @@ function queryOptions(agentId: string) {
 }
 
 export const Route = createFileRoute(
-  "/(authorized)/(sidebar)/agents/$agentId/"
+  "/(authorized)/(organization)/(sidebar)/agents/$agentId/"
 )({
   loader: async ({ context, params }) =>
     context.queryClient.ensureQueryData(queryOptions(params.agentId)),

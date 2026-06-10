@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 
-import type { AgentListItem } from "@workspace/shared/agents/types"
+import type { PhoneNumberListItem } from "@workspace/shared/phone-numbers/types"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,18 +10,20 @@ import {
 } from "@workspace/ui/components/breadcrumb"
 import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
-import { AgentsDataTable } from "@/components/agents/agents-data-table"
-import { CreateAgentForm } from "@/components/agents/create-agent-form"
+import { AddPhoneNumberForm } from "@/components/phone-numbers/add-phone-number-form"
+import { PhoneNumbersDataTable } from "@/components/phone-numbers/phone-numbers-data-table"
 import { api } from "@/lib/api"
 
 function queryOptions() {
   return {
-    queryKey: ["agents"],
-    queryFn: () => api.get<AgentListItem[]>("/agents"),
+    queryKey: ["phone-numbers"],
+    queryFn: () => api.get<PhoneNumberListItem[]>("/phone-numbers"),
   }
 }
 
-export const Route = createFileRoute("/(authorized)/(sidebar)/agents/")({
+export const Route = createFileRoute(
+  "/(authorized)/(organization)/(sidebar)/phone-numbers/"
+)({
   loader: async ({ context }) =>
     context.queryClient.ensureQueryData(queryOptions()),
   component: Page,
@@ -38,26 +40,26 @@ function Header() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbPage>Agents</BreadcrumbPage>
+            <BreadcrumbPage>Phone numbers</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <div className="ml-auto">
-        <CreateAgentForm />
+        <AddPhoneNumberForm />
       </div>
     </header>
   )
 }
 
 function Page() {
-  const { data: agents } = useSuspenseQuery(queryOptions())
+  const { data: phoneNumbers } = useSuspenseQuery(queryOptions())
 
   return (
     <>
-      <title>Agents</title>
+      <title>Phone numbers</title>
       <Header />
       <div className="p-5 pt-0">
-        <AgentsDataTable data={agents} />
+        <PhoneNumbersDataTable data={phoneNumbers} />
       </div>
     </>
   )

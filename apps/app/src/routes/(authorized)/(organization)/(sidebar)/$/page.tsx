@@ -11,7 +11,9 @@ import {
   EmptyTitle,
 } from "@workspace/ui/components/empty"
 
-export const Route = createFileRoute("/(authorized)/(sidebar)/$/")({
+export const Route = createFileRoute(
+  "/(authorized)/(organization)/(sidebar)/$/"
+)({
   component: Page,
 })
 

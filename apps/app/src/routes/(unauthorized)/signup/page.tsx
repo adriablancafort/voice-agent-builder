@@ -72,10 +72,7 @@ function Page() {
       }
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["session"],
-        refetchType: "all",
-      })
+      await queryClient.refetchQueries({ queryKey: ["session"] })
       toast.success("Account created")
       navigate({ to: "/" })
     },

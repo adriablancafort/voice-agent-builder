@@ -57,10 +57,7 @@ function Page() {
       }
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["session"],
-        refetchType: "all",
-      })
+      await queryClient.refetchQueries({ queryKey: ["session"] })
       navigate({ to: "/" })
     },
     onError: (error) => {

@@ -1,9 +1,11 @@
 import { createAuthClient } from "better-auth/client"
+import { organizationClient } from "better-auth/client/plugins"
 
 import { env } from "@/lib/env"
 
 export const authClient = createAuthClient({
   baseURL: env.API_URL,
+  plugins: [organizationClient()],
 })
 
 export const {
@@ -16,6 +18,7 @@ export const {
   linkSocial,
   listAccounts,
   listSessions,
+  organization,
   refreshToken,
   requestPasswordReset,
   resetPassword,

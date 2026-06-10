@@ -11,16 +11,19 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as unauthorizedLayoutRouteImport } from './routes/(unauthorized)/layout'
 import { Route as authorizedLayoutRouteImport } from './routes/(authorized)/layout'
-import { Route as authorizedsidebarLayoutRouteImport } from './routes/(authorized)/(sidebar)/layout'
+import { Route as authorizedorganizationLayoutRouteImport } from './routes/(authorized)/(organization)/layout'
 import { Route as unauthorizedSignupPageRouteImport } from './routes/(unauthorized)/signup/page'
 import { Route as unauthorizedSigninPageRouteImport } from './routes/(unauthorized)/signin/page'
 import { Route as unauthorizedSetNewPasswordPageRouteImport } from './routes/(unauthorized)/set-new-password/page'
 import { Route as unauthorizedResetPasswordPageRouteImport } from './routes/(unauthorized)/reset-password/page'
-import { Route as authorizedsidebarPageRouteImport } from './routes/(authorized)/(sidebar)/page'
-import { Route as authorizedsidebarPhoneNumbersPageRouteImport } from './routes/(authorized)/(sidebar)/phone-numbers/page'
-import { Route as authorizedsidebarAgentsPageRouteImport } from './routes/(authorized)/(sidebar)/agents/page'
-import { Route as authorizedsidebarSplatPageRouteImport } from './routes/(authorized)/(sidebar)/$/page'
-import { Route as authorizedsidebarAgentsAgentIdPageRouteImport } from './routes/(authorized)/(sidebar)/agents/$agentId/page'
+import { Route as authorizedSelectOrganizationPageRouteImport } from './routes/(authorized)/select-organization/page'
+import { Route as authorizedCreateOrganizationPageRouteImport } from './routes/(authorized)/create-organization/page'
+import { Route as authorizedorganizationsidebarLayoutRouteImport } from './routes/(authorized)/(organization)/(sidebar)/layout'
+import { Route as authorizedorganizationsidebarPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/page'
+import { Route as authorizedorganizationsidebarPhoneNumbersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/phone-numbers/page'
+import { Route as authorizedorganizationsidebarAgentsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/page'
+import { Route as authorizedorganizationsidebarSplatPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/$/page'
+import { Route as authorizedorganizationsidebarAgentsAgentIdPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/$agentId/page'
 
 const unauthorizedLayoutRoute = unauthorizedLayoutRouteImport.update({
   id: '/(unauthorized)',
@@ -30,10 +33,11 @@ const authorizedLayoutRoute = authorizedLayoutRouteImport.update({
   id: '/(authorized)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authorizedsidebarLayoutRoute = authorizedsidebarLayoutRouteImport.update({
-  id: '/(sidebar)',
-  getParentRoute: () => authorizedLayoutRoute,
-} as any)
+const authorizedorganizationLayoutRoute =
+  authorizedorganizationLayoutRouteImport.update({
+    id: '/(organization)',
+    getParentRoute: () => authorizedLayoutRoute,
+  } as any)
 const unauthorizedSignupPageRoute = unauthorizedSignupPageRouteImport.update({
   id: '/signup/',
   path: '/signup/',
@@ -56,92 +60,121 @@ const unauthorizedResetPasswordPageRoute =
     path: '/reset-password/',
     getParentRoute: () => unauthorizedLayoutRoute,
   } as any)
-const authorizedsidebarPageRoute = authorizedsidebarPageRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => authorizedsidebarLayoutRoute,
-} as any)
-const authorizedsidebarPhoneNumbersPageRoute =
-  authorizedsidebarPhoneNumbersPageRouteImport.update({
+const authorizedSelectOrganizationPageRoute =
+  authorizedSelectOrganizationPageRouteImport.update({
+    id: '/select-organization/',
+    path: '/select-organization/',
+    getParentRoute: () => authorizedLayoutRoute,
+  } as any)
+const authorizedCreateOrganizationPageRoute =
+  authorizedCreateOrganizationPageRouteImport.update({
+    id: '/create-organization/',
+    path: '/create-organization/',
+    getParentRoute: () => authorizedLayoutRoute,
+  } as any)
+const authorizedorganizationsidebarLayoutRoute =
+  authorizedorganizationsidebarLayoutRouteImport.update({
+    id: '/(sidebar)',
+    getParentRoute: () => authorizedorganizationLayoutRoute,
+  } as any)
+const authorizedorganizationsidebarPageRoute =
+  authorizedorganizationsidebarPageRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
+  } as any)
+const authorizedorganizationsidebarPhoneNumbersPageRoute =
+  authorizedorganizationsidebarPhoneNumbersPageRouteImport.update({
     id: '/phone-numbers/',
     path: '/phone-numbers/',
-    getParentRoute: () => authorizedsidebarLayoutRoute,
+    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
   } as any)
-const authorizedsidebarAgentsPageRoute =
-  authorizedsidebarAgentsPageRouteImport.update({
+const authorizedorganizationsidebarAgentsPageRoute =
+  authorizedorganizationsidebarAgentsPageRouteImport.update({
     id: '/agents/',
     path: '/agents/',
-    getParentRoute: () => authorizedsidebarLayoutRoute,
+    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
   } as any)
-const authorizedsidebarSplatPageRoute =
-  authorizedsidebarSplatPageRouteImport.update({
+const authorizedorganizationsidebarSplatPageRoute =
+  authorizedorganizationsidebarSplatPageRouteImport.update({
     id: '/$/',
     path: '/$/',
-    getParentRoute: () => authorizedsidebarLayoutRoute,
+    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
   } as any)
-const authorizedsidebarAgentsAgentIdPageRoute =
-  authorizedsidebarAgentsAgentIdPageRouteImport.update({
+const authorizedorganizationsidebarAgentsAgentIdPageRoute =
+  authorizedorganizationsidebarAgentsAgentIdPageRouteImport.update({
     id: '/agents/$agentId/',
     path: '/agents/$agentId/',
-    getParentRoute: () => authorizedsidebarLayoutRoute,
+    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof authorizedsidebarPageRoute
+  '/create-organization/': typeof authorizedCreateOrganizationPageRoute
+  '/select-organization/': typeof authorizedSelectOrganizationPageRoute
   '/reset-password/': typeof unauthorizedResetPasswordPageRoute
   '/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
   '/signin/': typeof unauthorizedSigninPageRoute
   '/signup/': typeof unauthorizedSignupPageRoute
-  '/$/': typeof authorizedsidebarSplatPageRoute
-  '/agents/': typeof authorizedsidebarAgentsPageRoute
-  '/phone-numbers/': typeof authorizedsidebarPhoneNumbersPageRoute
-  '/agents/$agentId/': typeof authorizedsidebarAgentsAgentIdPageRoute
+  '/': typeof authorizedorganizationsidebarPageRoute
+  '/$/': typeof authorizedorganizationsidebarSplatPageRoute
+  '/agents/': typeof authorizedorganizationsidebarAgentsPageRoute
+  '/phone-numbers/': typeof authorizedorganizationsidebarPhoneNumbersPageRoute
+  '/agents/$agentId/': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof authorizedsidebarPageRoute
+  '/create-organization': typeof authorizedCreateOrganizationPageRoute
+  '/select-organization': typeof authorizedSelectOrganizationPageRoute
   '/reset-password': typeof unauthorizedResetPasswordPageRoute
   '/set-new-password': typeof unauthorizedSetNewPasswordPageRoute
   '/signin': typeof unauthorizedSigninPageRoute
   '/signup': typeof unauthorizedSignupPageRoute
-  '/$': typeof authorizedsidebarSplatPageRoute
-  '/agents': typeof authorizedsidebarAgentsPageRoute
-  '/phone-numbers': typeof authorizedsidebarPhoneNumbersPageRoute
-  '/agents/$agentId': typeof authorizedsidebarAgentsAgentIdPageRoute
+  '/': typeof authorizedorganizationsidebarPageRoute
+  '/$': typeof authorizedorganizationsidebarSplatPageRoute
+  '/agents': typeof authorizedorganizationsidebarAgentsPageRoute
+  '/phone-numbers': typeof authorizedorganizationsidebarPhoneNumbersPageRoute
+  '/agents/$agentId': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(authorized)': typeof authorizedLayoutRouteWithChildren
   '/(unauthorized)': typeof unauthorizedLayoutRouteWithChildren
-  '/(authorized)/(sidebar)': typeof authorizedsidebarLayoutRouteWithChildren
-  '/(authorized)/(sidebar)/': typeof authorizedsidebarPageRoute
+  '/(authorized)/(organization)': typeof authorizedorganizationLayoutRouteWithChildren
+  '/(authorized)/(organization)/(sidebar)': typeof authorizedorganizationsidebarLayoutRouteWithChildren
+  '/(authorized)/create-organization/': typeof authorizedCreateOrganizationPageRoute
+  '/(authorized)/select-organization/': typeof authorizedSelectOrganizationPageRoute
   '/(unauthorized)/reset-password/': typeof unauthorizedResetPasswordPageRoute
   '/(unauthorized)/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
   '/(unauthorized)/signin/': typeof unauthorizedSigninPageRoute
   '/(unauthorized)/signup/': typeof unauthorizedSignupPageRoute
-  '/(authorized)/(sidebar)/$/': typeof authorizedsidebarSplatPageRoute
-  '/(authorized)/(sidebar)/agents/': typeof authorizedsidebarAgentsPageRoute
-  '/(authorized)/(sidebar)/phone-numbers/': typeof authorizedsidebarPhoneNumbersPageRoute
-  '/(authorized)/(sidebar)/agents/$agentId/': typeof authorizedsidebarAgentsAgentIdPageRoute
+  '/(authorized)/(organization)/(sidebar)/': typeof authorizedorganizationsidebarPageRoute
+  '/(authorized)/(organization)/(sidebar)/$/': typeof authorizedorganizationsidebarSplatPageRoute
+  '/(authorized)/(organization)/(sidebar)/agents/': typeof authorizedorganizationsidebarAgentsPageRoute
+  '/(authorized)/(organization)/(sidebar)/phone-numbers/': typeof authorizedorganizationsidebarPhoneNumbersPageRoute
+  '/(authorized)/(organization)/(sidebar)/agents/$agentId/': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
+    | '/create-organization/'
+    | '/select-organization/'
     | '/reset-password/'
     | '/set-new-password/'
     | '/signin/'
     | '/signup/'
+    | '/'
     | '/$/'
     | '/agents/'
     | '/phone-numbers/'
     | '/agents/$agentId/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
+    | '/create-organization'
+    | '/select-organization'
     | '/reset-password'
     | '/set-new-password'
     | '/signin'
     | '/signup'
+    | '/'
     | '/$'
     | '/agents'
     | '/phone-numbers'
@@ -150,16 +183,19 @@ export interface FileRouteTypes {
     | '__root__'
     | '/(authorized)'
     | '/(unauthorized)'
-    | '/(authorized)/(sidebar)'
-    | '/(authorized)/(sidebar)/'
+    | '/(authorized)/(organization)'
+    | '/(authorized)/(organization)/(sidebar)'
+    | '/(authorized)/create-organization/'
+    | '/(authorized)/select-organization/'
     | '/(unauthorized)/reset-password/'
     | '/(unauthorized)/set-new-password/'
     | '/(unauthorized)/signin/'
     | '/(unauthorized)/signup/'
-    | '/(authorized)/(sidebar)/$/'
-    | '/(authorized)/(sidebar)/agents/'
-    | '/(authorized)/(sidebar)/phone-numbers/'
-    | '/(authorized)/(sidebar)/agents/$agentId/'
+    | '/(authorized)/(organization)/(sidebar)/'
+    | '/(authorized)/(organization)/(sidebar)/$/'
+    | '/(authorized)/(organization)/(sidebar)/agents/'
+    | '/(authorized)/(organization)/(sidebar)/phone-numbers/'
+    | '/(authorized)/(organization)/(sidebar)/agents/$agentId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -183,11 +219,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(authorized)/(sidebar)': {
-      id: '/(authorized)/(sidebar)'
+    '/(authorized)/(organization)': {
+      id: '/(authorized)/(organization)'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof authorizedsidebarLayoutRouteImport
+      preLoaderRoute: typeof authorizedorganizationLayoutRouteImport
       parentRoute: typeof authorizedLayoutRoute
     }
     '/(unauthorized)/signup/': {
@@ -218,74 +254,118 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof unauthorizedResetPasswordPageRouteImport
       parentRoute: typeof unauthorizedLayoutRoute
     }
-    '/(authorized)/(sidebar)/': {
-      id: '/(authorized)/(sidebar)/'
+    '/(authorized)/select-organization/': {
+      id: '/(authorized)/select-organization/'
+      path: '/select-organization'
+      fullPath: '/select-organization/'
+      preLoaderRoute: typeof authorizedSelectOrganizationPageRouteImport
+      parentRoute: typeof authorizedLayoutRoute
+    }
+    '/(authorized)/create-organization/': {
+      id: '/(authorized)/create-organization/'
+      path: '/create-organization'
+      fullPath: '/create-organization/'
+      preLoaderRoute: typeof authorizedCreateOrganizationPageRouteImport
+      parentRoute: typeof authorizedLayoutRoute
+    }
+    '/(authorized)/(organization)/(sidebar)': {
+      id: '/(authorized)/(organization)/(sidebar)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authorizedorganizationsidebarLayoutRouteImport
+      parentRoute: typeof authorizedorganizationLayoutRoute
+    }
+    '/(authorized)/(organization)/(sidebar)/': {
+      id: '/(authorized)/(organization)/(sidebar)/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof authorizedsidebarPageRouteImport
-      parentRoute: typeof authorizedsidebarLayoutRoute
+      preLoaderRoute: typeof authorizedorganizationsidebarPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
-    '/(authorized)/(sidebar)/phone-numbers/': {
-      id: '/(authorized)/(sidebar)/phone-numbers/'
+    '/(authorized)/(organization)/(sidebar)/phone-numbers/': {
+      id: '/(authorized)/(organization)/(sidebar)/phone-numbers/'
       path: '/phone-numbers'
       fullPath: '/phone-numbers/'
-      preLoaderRoute: typeof authorizedsidebarPhoneNumbersPageRouteImport
-      parentRoute: typeof authorizedsidebarLayoutRoute
+      preLoaderRoute: typeof authorizedorganizationsidebarPhoneNumbersPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
-    '/(authorized)/(sidebar)/agents/': {
-      id: '/(authorized)/(sidebar)/agents/'
+    '/(authorized)/(organization)/(sidebar)/agents/': {
+      id: '/(authorized)/(organization)/(sidebar)/agents/'
       path: '/agents'
       fullPath: '/agents/'
-      preLoaderRoute: typeof authorizedsidebarAgentsPageRouteImport
-      parentRoute: typeof authorizedsidebarLayoutRoute
+      preLoaderRoute: typeof authorizedorganizationsidebarAgentsPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
-    '/(authorized)/(sidebar)/$/': {
-      id: '/(authorized)/(sidebar)/$/'
+    '/(authorized)/(organization)/(sidebar)/$/': {
+      id: '/(authorized)/(organization)/(sidebar)/$/'
       path: '/$'
       fullPath: '/$/'
-      preLoaderRoute: typeof authorizedsidebarSplatPageRouteImport
-      parentRoute: typeof authorizedsidebarLayoutRoute
+      preLoaderRoute: typeof authorizedorganizationsidebarSplatPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
-    '/(authorized)/(sidebar)/agents/$agentId/': {
-      id: '/(authorized)/(sidebar)/agents/$agentId/'
+    '/(authorized)/(organization)/(sidebar)/agents/$agentId/': {
+      id: '/(authorized)/(organization)/(sidebar)/agents/$agentId/'
       path: '/agents/$agentId'
       fullPath: '/agents/$agentId/'
-      preLoaderRoute: typeof authorizedsidebarAgentsAgentIdPageRouteImport
-      parentRoute: typeof authorizedsidebarLayoutRoute
+      preLoaderRoute: typeof authorizedorganizationsidebarAgentsAgentIdPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
   }
 }
 
-interface authorizedsidebarLayoutRouteChildren {
-  authorizedsidebarPageRoute: typeof authorizedsidebarPageRoute
-  authorizedsidebarSplatPageRoute: typeof authorizedsidebarSplatPageRoute
-  authorizedsidebarAgentsPageRoute: typeof authorizedsidebarAgentsPageRoute
-  authorizedsidebarPhoneNumbersPageRoute: typeof authorizedsidebarPhoneNumbersPageRoute
-  authorizedsidebarAgentsAgentIdPageRoute: typeof authorizedsidebarAgentsAgentIdPageRoute
+interface authorizedorganizationsidebarLayoutRouteChildren {
+  authorizedorganizationsidebarPageRoute: typeof authorizedorganizationsidebarPageRoute
+  authorizedorganizationsidebarSplatPageRoute: typeof authorizedorganizationsidebarSplatPageRoute
+  authorizedorganizationsidebarAgentsPageRoute: typeof authorizedorganizationsidebarAgentsPageRoute
+  authorizedorganizationsidebarPhoneNumbersPageRoute: typeof authorizedorganizationsidebarPhoneNumbersPageRoute
+  authorizedorganizationsidebarAgentsAgentIdPageRoute: typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
 }
 
-const authorizedsidebarLayoutRouteChildren: authorizedsidebarLayoutRouteChildren =
+const authorizedorganizationsidebarLayoutRouteChildren: authorizedorganizationsidebarLayoutRouteChildren =
   {
-    authorizedsidebarPageRoute: authorizedsidebarPageRoute,
-    authorizedsidebarSplatPageRoute: authorizedsidebarSplatPageRoute,
-    authorizedsidebarAgentsPageRoute: authorizedsidebarAgentsPageRoute,
-    authorizedsidebarPhoneNumbersPageRoute:
-      authorizedsidebarPhoneNumbersPageRoute,
-    authorizedsidebarAgentsAgentIdPageRoute:
-      authorizedsidebarAgentsAgentIdPageRoute,
+    authorizedorganizationsidebarPageRoute:
+      authorizedorganizationsidebarPageRoute,
+    authorizedorganizationsidebarSplatPageRoute:
+      authorizedorganizationsidebarSplatPageRoute,
+    authorizedorganizationsidebarAgentsPageRoute:
+      authorizedorganizationsidebarAgentsPageRoute,
+    authorizedorganizationsidebarPhoneNumbersPageRoute:
+      authorizedorganizationsidebarPhoneNumbersPageRoute,
+    authorizedorganizationsidebarAgentsAgentIdPageRoute:
+      authorizedorganizationsidebarAgentsAgentIdPageRoute,
   }
 
-const authorizedsidebarLayoutRouteWithChildren =
-  authorizedsidebarLayoutRoute._addFileChildren(
-    authorizedsidebarLayoutRouteChildren,
+const authorizedorganizationsidebarLayoutRouteWithChildren =
+  authorizedorganizationsidebarLayoutRoute._addFileChildren(
+    authorizedorganizationsidebarLayoutRouteChildren,
+  )
+
+interface authorizedorganizationLayoutRouteChildren {
+  authorizedorganizationsidebarLayoutRoute: typeof authorizedorganizationsidebarLayoutRouteWithChildren
+}
+
+const authorizedorganizationLayoutRouteChildren: authorizedorganizationLayoutRouteChildren =
+  {
+    authorizedorganizationsidebarLayoutRoute:
+      authorizedorganizationsidebarLayoutRouteWithChildren,
+  }
+
+const authorizedorganizationLayoutRouteWithChildren =
+  authorizedorganizationLayoutRoute._addFileChildren(
+    authorizedorganizationLayoutRouteChildren,
   )
 
 interface authorizedLayoutRouteChildren {
-  authorizedsidebarLayoutRoute: typeof authorizedsidebarLayoutRouteWithChildren
+  authorizedorganizationLayoutRoute: typeof authorizedorganizationLayoutRouteWithChildren
+  authorizedCreateOrganizationPageRoute: typeof authorizedCreateOrganizationPageRoute
+  authorizedSelectOrganizationPageRoute: typeof authorizedSelectOrganizationPageRoute
 }
 
 const authorizedLayoutRouteChildren: authorizedLayoutRouteChildren = {
-  authorizedsidebarLayoutRoute: authorizedsidebarLayoutRouteWithChildren,
+  authorizedorganizationLayoutRoute:
+    authorizedorganizationLayoutRouteWithChildren,
+  authorizedCreateOrganizationPageRoute: authorizedCreateOrganizationPageRoute,
+  authorizedSelectOrganizationPageRoute: authorizedSelectOrganizationPageRoute,
 }
 
 const authorizedLayoutRouteWithChildren =
