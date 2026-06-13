@@ -10,6 +10,7 @@ import { create } from "zustand"
 
 import { createDefaultAgentConfig } from "@workspace/shared/agent-config/defaults"
 import type {
+  AgentConfig,
   FlowEdgeConfig,
   FlowNodeConfig,
 } from "@workspace/shared/agent-config/types"
@@ -23,251 +24,100 @@ export type FlowSidePanelState =
   | { kind: "node"; nodeId: string }
   | { kind: "edge"; edgeId: string }
 
-type AgentStore = AgentDetail & {
+type AgentStoreState = AgentDetail & {
   sidePanel: FlowSidePanelState
-  openTestPanel: () => void
-  openGlobalPromptPanel: () => void
-  openModelsConfigPanel: () => void
-  openNodePanel: (nodeId: string) => void
-  openEdgePanel: (edgeId: string) => void
-  closeSidePanel: () => void
+}
+
+type AgentStore = AgentStoreState & {
   setName: (name: string) => void
-  setGlobalPrompt: (prompt: string) => void
-  setSttModel: (model: string) => void
-  setLlmModel: (model: string) => void
-  setTtsModel: (model: string) => void
-  setTtsVoice: (voice: string) => void
-  setAgent: (agent: AgentDetail) => void
-  updateNode: (
-    nodeId: string,
-    updater: (node: FlowNodeConfig) => FlowNodeConfig
-  ) => void
-  updateEdge: (
-    edgeId: string,
-    updater: (edge: FlowEdgeConfig) => FlowEdgeConfig
-  ) => void
+  setConfig: (draftConfig: AgentConfig) => void
+  setNode: (node: FlowNodeConfig) => void
+  setEdge: (edge: FlowEdgeConfig) => void
+  addNode: (node: FlowNodeConfig) => void
   onNodesChange: (changes: NodeChange<FlowNodeConfig>[]) => void
   onEdgesChange: (changes: EdgeChange<FlowEdgeConfig>[]) => void
   onConnect: (connection: Connection) => void
-  addNode: (node: FlowNodeConfig) => void
+  selectNode: (nodeId: string) => void
+  selectEdge: (edgeId: string) => void
+  openSidePanel: (panel: FlowSidePanelState) => void
+  closeSidePanel: () => void
 }
 
-function resolveSidePanelState(
-  sidePanel: FlowSidePanelState,
-  nodes: FlowNodeConfig[],
-  edges: FlowEdgeConfig[]
-): FlowSidePanelState {
-  if (sidePanel.kind === "node") {
-    const hasNode = nodes.some((node) => node.id === sidePanel.nodeId)
-    return hasNode ? sidePanel : { kind: "closed" }
-  }
-
-  if (sidePanel.kind === "edge") {
-    const hasEdge = edges.some((edge) => edge.id === sidePanel.edgeId)
-    return hasEdge ? sidePanel : { kind: "closed" }
-  }
-
-  return sidePanel
-}
-
-function createEdgeId() {
-  if (
-    typeof crypto !== "undefined" &&
-    typeof crypto.randomUUID === "function"
-  ) {
-    return crypto.randomUUID()
-  }
-
-  return `edge-${Date.now()}`
-}
-
-const initialState: AgentDetail = {
+const initialState: AgentStoreState = {
   id: "",
   name: "",
   draftConfig: createDefaultAgentConfig(),
   createdAt: new Date(),
   updatedAt: new Date(),
   versions: [],
+  sidePanel: { kind: "closed" },
 }
 
-export const useAgentStore = create<AgentStore>((set) => ({
+export const useAgentStore = create<AgentStore>((set, get) => ({
   ...initialState,
-  sidePanel: { kind: "closed" },
-  openTestPanel: () =>
-    set({
-      sidePanel: { kind: "test" },
-    }),
-  openGlobalPromptPanel: () =>
-    set({
-      sidePanel: { kind: "global-prompt" },
-    }),
-  openModelsConfigPanel: () =>
-    set({
-      sidePanel: { kind: "models-config" },
-    }),
-  openNodePanel: (nodeId) =>
-    set({
-      sidePanel: { kind: "node", nodeId },
-    }),
-  openEdgePanel: (edgeId) =>
-    set({
-      sidePanel: { kind: "edge", edgeId },
-    }),
-  closeSidePanel: () =>
-    set({
-      sidePanel: { kind: "closed" },
-    }),
-  setName: (name) =>
-    set({
-      name,
-    }),
-  setGlobalPrompt: (globalPrompt) =>
+  setName: (name) => set({ name }),
+  setConfig: (draftConfig) => set({ draftConfig }),
+  setNode: (node) =>
     set((state) => ({
       draftConfig: {
         ...state.draftConfig,
-        globalPrompt,
-      },
-    })),
-  setSttModel: (model) =>
-    set((state) => ({
-      draftConfig: {
-        ...state.draftConfig,
-        stt: {
-          ...state.draftConfig.stt,
-          model,
-        },
-      },
-    })),
-  setLlmModel: (model) =>
-    set((state) => ({
-      draftConfig: {
-        ...state.draftConfig,
-        llm: {
-          ...state.draftConfig.llm,
-          model,
-        },
-      },
-    })),
-  setTtsModel: (model) =>
-    set((state) => ({
-      draftConfig: {
-        ...state.draftConfig,
-        tts: {
-          ...state.draftConfig.tts,
-          model,
-        },
-      },
-    })),
-  setTtsVoice: (voice) =>
-    set((state) => ({
-      draftConfig: {
-        ...state.draftConfig,
-        tts: {
-          ...state.draftConfig.tts,
-          voice,
-        },
-      },
-    })),
-  setAgent: (agent) =>
-    set((state) => {
-      const isSameAgent = state.id === agent.id
-
-      return {
-        id: agent.id,
-        name: agent.name,
-        createdAt: agent.createdAt,
-        updatedAt: agent.updatedAt,
-        versions: agent.versions,
-        draftConfig: agent.draftConfig,
-        sidePanel: isSameAgent
-          ? resolveSidePanelState(
-              state.sidePanel,
-              agent.draftConfig.nodes,
-              agent.draftConfig.edges
-            )
-          : { kind: "closed" },
-      }
-    }),
-  updateNode: (nodeId, updater) =>
-    set((state) => ({
-      draftConfig: {
-        ...state.draftConfig,
-        nodes: state.draftConfig.nodes.map((node) =>
-          node.id === nodeId ? updater(node) : node
+        nodes: state.draftConfig.nodes.map((entry) =>
+          entry.id === node.id ? node : entry
         ),
       },
     })),
-  updateEdge: (edgeId, updater) =>
+  setEdge: (edge) =>
     set((state) => ({
       draftConfig: {
         ...state.draftConfig,
-        edges: state.draftConfig.edges.map((edge) =>
-          edge.id === edgeId ? updater(edge) : edge
+        edges: state.draftConfig.edges.map((entry) =>
+          entry.id === edge.id ? edge : entry
         ),
       },
     })),
-  onNodesChange: (changes) =>
-    set((state) => {
-      const nodes = applyNodeChanges(changes, state.draftConfig.nodes)
-      const draftConfig = {
-        ...state.draftConfig,
-        nodes,
-      }
-
-      return {
-        draftConfig,
-        sidePanel: resolveSidePanelState(
-          state.sidePanel,
-          draftConfig.nodes,
-          draftConfig.edges
-        ),
-      }
-    }),
-  onEdgesChange: (changes) =>
-    set((state) => {
-      const edges = applyEdgeChanges(changes, state.draftConfig.edges)
-      const draftConfig = {
-        ...state.draftConfig,
-        edges,
-      }
-
-      return {
-        draftConfig,
-        sidePanel: resolveSidePanelState(
-          state.sidePanel,
-          draftConfig.nodes,
-          draftConfig.edges
-        ),
-      }
-    }),
-  onConnect: (connection) =>
-    set((state) => {
-      const edgeId = createEdgeId()
-      const edges = addEdge(
-        {
-          ...connection,
-          id: edgeId,
-          data: {
-            condition: "Transition condition",
-          },
-        },
-        state.draftConfig.edges
-      )
-
-      return {
-        draftConfig: {
-          ...state.draftConfig,
-          edges,
-        },
-        sidePanel: { kind: "edge", edgeId },
-      }
-    }),
-  addNode: (node) =>
+  addNode: (node) => {
     set((state) => ({
       draftConfig: {
         ...state.draftConfig,
         nodes: [...state.draftConfig.nodes, node],
       },
-      sidePanel: { kind: "node", nodeId: node.id },
+    }))
+    get().openSidePanel({ kind: "node", nodeId: node.id })
+  },
+  onNodesChange: (changes) =>
+    set((state) => ({
+      draftConfig: {
+        ...state.draftConfig,
+        nodes: applyNodeChanges(changes, state.draftConfig.nodes),
+      },
     })),
+  onEdgesChange: (changes) =>
+    set((state) => ({
+      draftConfig: {
+        ...state.draftConfig,
+        edges: applyEdgeChanges(changes, state.draftConfig.edges),
+      },
+    })),
+  onConnect: (connection) => {
+    const edgeId = crypto.randomUUID()
+
+    set((state) => ({
+      draftConfig: {
+        ...state.draftConfig,
+        edges: addEdge(
+          {
+            ...connection,
+            id: edgeId,
+            data: { condition: "Transition condition" },
+          },
+          state.draftConfig.edges
+        ),
+      },
+    }))
+    queueMicrotask(() => get().openSidePanel({ kind: "edge", edgeId }))
+  },
+  selectNode: (nodeId) => get().openSidePanel({ kind: "node", nodeId }),
+  selectEdge: (edgeId) => get().openSidePanel({ kind: "edge", edgeId }),
+  openSidePanel: (panel) => set({ sidePanel: panel }),
+  closeSidePanel: () => set({ sidePanel: { kind: "closed" } }),
 }))

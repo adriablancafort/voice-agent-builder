@@ -1,49 +1,32 @@
-import type { ChangeEvent } from "react"
-
+import type { FlowEndNode } from "@workspace/shared/agent-config/types"
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import { useAgentStore } from "@/stores/agent"
+import { FlowSidePanelBase } from "../base"
 
 type EndNodePanelProps = {
-  nodeId: string
+  node: FlowEndNode
 }
 
-export function EndNodePanel({ nodeId }: EndNodePanelProps) {
-  const node = useAgentStore((state) =>
-    state.draftConfig.nodes.find((entry) => entry.id === nodeId)
-  )
-  const updateNode = useAgentStore((state) => state.updateNode)
-
-  if (!node || node.type !== "end") {
-    return null
-  }
-
-  const endNode = node
-
-  function updateEndNodeName(name: string) {
-    updateNode(endNode.id, (current) =>
-      current.type !== "end"
-        ? current
-        : {
-            ...current,
-            data: {
-              ...current.data,
-              name,
-            },
-          }
-    )
-  }
-
-  function handleNameChange(event: ChangeEvent<HTMLInputElement>) {
-    updateEndNodeName(event.target.value)
-  }
+export function EndNodePanel({ node }: EndNodePanelProps) {
+  const setNode = useAgentStore((state) => state.setNode)
 
   return (
-    <FieldGroup>
-      <Field>
-        <FieldLabel>Name</FieldLabel>
-        <Input value={endNode.data.name} onChange={handleNameChange} />
-      </Field>
-    </FieldGroup>
+    <FlowSidePanelBase title="End node">
+      <FieldGroup>
+        <Field>
+          <FieldLabel>Name</FieldLabel>
+          <Input
+            value={node.data.name}
+            onChange={(event) =>
+              setNode({
+                ...node,
+                data: { ...node.data, name: event.target.value },
+              })
+            }
+          />
+        </Field>
+      </FieldGroup>
+    </FlowSidePanelBase>
   )
 }

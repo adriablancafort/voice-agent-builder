@@ -1,13 +1,15 @@
 import { VoiceAgentClient } from "@/components/voice-agent-client"
+import { useAgentStore } from "@/stores/agent"
+import { FlowSidePanelBase } from "./base"
 
-type TestPanelProps = {
-  agentId: string
-}
+export function TestPanel() {
+  const agentId = useAgentStore((state) => state.id)
 
-export function TestPanel({ agentId }: TestPanelProps) {
   return (
-    <div className="flex h-full items-center justify-center">
-      <VoiceAgentClient agentId={agentId} />
-    </div>
+    <FlowSidePanelBase title="Test agent">
+      <div className="flex h-full items-center justify-center">
+        <VoiceAgentClient agentId={agentId} />
+      </div>
+    </FlowSidePanelBase>
   )
 }

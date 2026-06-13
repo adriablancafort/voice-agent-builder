@@ -1,6 +1,5 @@
 import { Background, Controls, MiniMap, ReactFlow } from "@xyflow/react"
 import "@xyflow/react/dist/style.css"
-import { useRef } from "react"
 import { useShallow } from "zustand/react/shallow"
 
 import { FlowConfigButtons } from "@/components/agents/flow-config-buttons"
@@ -15,8 +14,8 @@ const selector = (state: ReturnType<typeof useAgentStore.getState>) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
-  openNodePanel: state.openNodePanel,
-  openEdgePanel: state.openEdgePanel,
+  selectNode: state.selectNode,
+  selectEdge: state.selectEdge,
   closeSidePanel: state.closeSidePanel,
 })
 
@@ -27,25 +26,10 @@ export default function Canvas() {
     onNodesChange,
     onEdgesChange,
     onConnect,
-    openNodePanel,
-    openEdgePanel,
+    selectNode,
+    selectEdge,
     closeSidePanel,
   } = useAgentStore(useShallow(selector))
-  const skipNextPaneCloseRef = useRef(false)
-
-  function handleConnect(connection: Parameters<typeof onConnect>[0]) {
-    skipNextPaneCloseRef.current = true
-    onConnect(connection)
-  }
-
-  function handlePaneClick() {
-    if (skipNextPaneCloseRef.current) {
-      skipNextPaneCloseRef.current = false
-      return
-    }
-
-    closeSidePanel()
-  }
 
   return (
     <ReactFlow
@@ -53,10 +37,10 @@ export default function Canvas() {
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
-      onConnect={handleConnect}
-      onNodeClick={(_, node) => openNodePanel(node.id)}
-      onEdgeClick={(_, edge) => openEdgePanel(edge.id)}
-      onPaneClick={handlePaneClick}
+      onConnect={onConnect}
+      onNodeClick={(_, node) => selectNode(node.id)}
+      onEdgeClick={(_, edge) => selectEdge(edge.id)}
+      onPaneClick={closeSidePanel}
       nodeTypes={{
         conversation: ConversationNode,
         end: EndNode,

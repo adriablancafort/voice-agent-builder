@@ -1,8 +1,7 @@
-import type { ChangeEvent } from "react"
-
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import { useAgentStore } from "@/stores/agent"
+import { FlowSidePanelBase } from "../base"
 
 type EdgePanelProps = {
   edgeId: string
@@ -12,37 +11,28 @@ export function EdgePanel({ edgeId }: EdgePanelProps) {
   const edge = useAgentStore((state) =>
     state.draftConfig.edges.find((entry) => entry.id === edgeId)
   )
-  const updateEdge = useAgentStore((state) => state.updateEdge)
+  const setEdge = useAgentStore((state) => state.setEdge)
 
   if (!edge) {
     return null
   }
 
-  const conditionEdge = edge
-
-  function updateEdgeCondition(condition: string) {
-    updateEdge(conditionEdge.id, (current) => ({
-      ...current,
-      data: {
-        ...current.data,
-        condition,
-      },
-    }))
-  }
-
-  function handleConditionChange(event: ChangeEvent<HTMLInputElement>) {
-    updateEdgeCondition(event.target.value)
-  }
-
   return (
-    <FieldGroup>
-      <Field>
-        <FieldLabel>Condition</FieldLabel>
-        <Input
-          value={conditionEdge.data.condition}
-          onChange={handleConditionChange}
-        />
-      </Field>
-    </FieldGroup>
+    <FlowSidePanelBase title="Edge">
+      <FieldGroup>
+        <Field>
+          <FieldLabel>Condition</FieldLabel>
+          <Input
+            value={edge.data.condition}
+            onChange={(event) =>
+              setEdge({
+                ...edge,
+                data: { ...edge.data, condition: event.target.value },
+              })
+            }
+          />
+        </Field>
+      </FieldGroup>
+    </FlowSidePanelBase>
   )
 }

@@ -16,7 +16,7 @@ import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { PublishAgentForm } from "@/components/agents/publish-agent-form"
 import { SaveAgentButton } from "@/components/agents/save-agent-button"
-import { TestAgentPanel } from "@/components/agents/test-agent-panel"
+import { TestAgentButton } from "@/components/agents/test-agent-button"
 import Canvas from "@/components/flow/canvas"
 import { FlowSidePanel } from "@/components/flow/sidepanel"
 import { api } from "@/lib/api"
@@ -69,7 +69,7 @@ function Header() {
       </Breadcrumb>
       <div className="ml-auto flex space-x-3">
         <SaveAgentButton />
-        <TestAgentPanel />
+        <TestAgentButton />
         <PublishAgentForm />
       </div>
     </header>
@@ -78,13 +78,12 @@ function Header() {
 
 function Page() {
   const { agentId } = Route.useParams()
-  const setAgent = useAgentStore((state) => state.setAgent)
   const { data: agent } = useSuspenseQuery(queryOptions(agentId))
   const name = useAgentStore((state) => state.name)
 
   useEffect(() => {
-    setAgent(agent)
-  }, [agent, setAgent])
+    useAgentStore.setState(agent)
+  }, [agent])
 
   return (
     <>

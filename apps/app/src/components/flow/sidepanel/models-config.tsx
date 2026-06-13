@@ -1,5 +1,3 @@
-import type { ChangeEvent } from "react"
-
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import {
@@ -10,6 +8,7 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select"
 import { useAgentStore } from "@/stores/agent"
+import { FlowSidePanelBase } from "./base"
 
 const STT_MODEL_OPTIONS = [
   "deepgram/flux-general",
@@ -81,77 +80,101 @@ const TTS_MODEL_OPTIONS = [
 ] as const
 
 export function ModelsConfigPanel() {
-  const sttModel = useAgentStore((state) => state.draftConfig.stt.model)
-  const llmModel = useAgentStore((state) => state.draftConfig.llm.model)
-  const ttsModel = useAgentStore((state) => state.draftConfig.tts.model)
-  const ttsVoice = useAgentStore((state) => state.draftConfig.tts.voice ?? "")
-  const setSttModel = useAgentStore((state) => state.setSttModel)
-  const setLlmModel = useAgentStore((state) => state.setLlmModel)
-  const setTtsModel = useAgentStore((state) => state.setTtsModel)
-  const setTtsVoice = useAgentStore((state) => state.setTtsVoice)
-
-  function handleVoiceChange(event: ChangeEvent<HTMLInputElement>) {
-    setTtsVoice(event.target.value)
-  }
+  const draftConfig = useAgentStore((state) => state.draftConfig)
+  const setConfig = useAgentStore((state) => state.setConfig)
 
   return (
-    <FieldGroup>
-      <Field>
-        <FieldLabel>STT</FieldLabel>
-        <Select value={sttModel} onValueChange={setSttModel}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select STT model" />
-          </SelectTrigger>
-          <SelectContent>
-            {STT_MODEL_OPTIONS.map((model) => (
-              <SelectItem key={model} value={model}>
-                {model}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </Field>
+    <FlowSidePanelBase title="Models">
+      <FieldGroup>
+        <Field>
+          <FieldLabel>STT</FieldLabel>
+          <Select
+            value={draftConfig.stt.model}
+            onValueChange={(model) => {
+              if (!model) return
+              setConfig({
+                ...draftConfig,
+                stt: { ...draftConfig.stt, model },
+              })
+            }}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select STT model" />
+            </SelectTrigger>
+            <SelectContent>
+              {STT_MODEL_OPTIONS.map((model) => (
+                <SelectItem key={model} value={model}>
+                  {model}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Field>
 
-      <Field>
-        <FieldLabel>LLM</FieldLabel>
-        <Select value={llmModel} onValueChange={setLlmModel}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select LLM model" />
-          </SelectTrigger>
-          <SelectContent>
-            {LLM_MODEL_OPTIONS.map((model) => (
-              <SelectItem key={model} value={model}>
-                {model}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </Field>
+        <Field>
+          <FieldLabel>LLM</FieldLabel>
+          <Select
+            value={draftConfig.llm.model}
+            onValueChange={(model) => {
+              if (!model) return
+              setConfig({
+                ...draftConfig,
+                llm: { ...draftConfig.llm, model },
+              })
+            }}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select LLM model" />
+            </SelectTrigger>
+            <SelectContent>
+              {LLM_MODEL_OPTIONS.map((model) => (
+                <SelectItem key={model} value={model}>
+                  {model}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Field>
 
-      <Field>
-        <FieldLabel>TTS</FieldLabel>
-        <Select value={ttsModel} onValueChange={setTtsModel}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select TTS model" />
-          </SelectTrigger>
-          <SelectContent>
-            {TTS_MODEL_OPTIONS.map((model) => (
-              <SelectItem key={model} value={model}>
-                {model}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </Field>
+        <Field>
+          <FieldLabel>TTS</FieldLabel>
+          <Select
+            value={draftConfig.tts.model}
+            onValueChange={(model) => {
+              if (!model) return
+              setConfig({
+                ...draftConfig,
+                tts: { ...draftConfig.tts, model },
+              })
+            }}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select TTS model" />
+            </SelectTrigger>
+            <SelectContent>
+              {TTS_MODEL_OPTIONS.map((model) => (
+                <SelectItem key={model} value={model}>
+                  {model}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Field>
 
-      <Field>
-        <FieldLabel>TTS voice</FieldLabel>
-        <Input
-          value={ttsVoice}
-          onChange={handleVoiceChange}
-          placeholder="Voice id or name"
-        />
-      </Field>
-    </FieldGroup>
+        <Field>
+          <FieldLabel>TTS voice</FieldLabel>
+          <Input
+            value={draftConfig.tts.voice ?? ""}
+            onChange={(event) =>
+              setConfig({
+                ...draftConfig,
+                tts: { ...draftConfig.tts, voice: event.target.value },
+              })
+            }
+            placeholder="Voice id or name"
+          />
+        </Field>
+      </FieldGroup>
+    </FlowSidePanelBase>
   )
 }
