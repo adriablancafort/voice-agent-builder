@@ -1,3 +1,4 @@
+import { useReactFlow } from "@xyflow/react"
 import { Phone, PhoneOff, Play, Plus } from "lucide-react"
 import { useState } from "react"
 
@@ -7,22 +8,28 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@workspace/ui/components/collapsible"
+import {
+  FOCUS_ZOOM,
+  getNextNodePosition,
+  SIDE_PANEL_OFFSET_PX,
+} from "@/components/flow/node-position"
 import { useAgentStore } from "@/stores/agent"
 
 export function AddNodeButton() {
   const [open, setOpen] = useState(false)
   const addNode = useAgentStore((state) => state.addNode)
   const nodes = useAgentStore((state) => state.draftConfig.nodes)
+  const flow = useReactFlow()
 
   function handleAdd(type: "start" | "conversation" | "end") {
     const id = `${type}-${Date.now()}`
-    const offset = nodes.length * 50
+    const position = getNextNodePosition(nodes)
 
     if (type === "start") {
       addNode({
         id,
         type: "conversation",
-        position: { x: 100 + offset, y: 100 + offset },
+        position,
         data: {
           name: "Start Conversation",
           isStart: true,
@@ -37,7 +44,7 @@ export function AddNodeButton() {
       addNode({
         id,
         type: "conversation",
-        position: { x: 100 + offset, y: 100 + offset },
+        position,
         data: {
           name: "New Conversation",
           instructions: {
@@ -50,10 +57,15 @@ export function AddNodeButton() {
       addNode({
         id,
         type: "end",
-        position: { x: 100 + offset, y: 300 + offset },
+        position,
         data: { name: "End Call" },
       })
     }
+
+    flow.setCenter(position.x + SIDE_PANEL_OFFSET_PX, position.y, {
+      zoom: FOCUS_ZOOM,
+      duration: 800,
+    })
 
     setOpen(false)
   }
