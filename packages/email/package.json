@@ -1,0 +1,28 @@
+{
+  "name": "@workspace/email",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "email dev --dir src/templates",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome lint .",
+    "format": "biome check --write --linter-enabled=false ."
+  },
+  "exports": {
+    "./components/*": "./src/components/*.tsx",
+    "./templates/*": "./src/templates/*.tsx",
+    "./send": "./src/send.ts",
+    "./transport": "./src/transport.ts"
+  },
+  "dependencies": {
+    "dotenv": "catalog:",
+    "nodemailer": "^9.0.0",
+    "react": "catalog:",
+    "react-email": "^6.6.0"
+  },
+  "devDependencies": {
+    "@react-email/ui": "^6.6.0",
+    "@types/nodemailer": "^7.0.9",
+    "typescript": "catalog:"
+  }
+}
