@@ -1,5 +1,12 @@
+import {
+  getModelSections,
+  getProviderId,
+  getVoices,
+  pickFirstModel,
+  pickFirstVoice,
+} from "@workspace/shared/models/helpers"
+import type { ModelKind } from "@workspace/shared/models/types"
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
-import { Input } from "@workspace/ui/components/input"
 import {
   Select,
   SelectContent,
@@ -10,169 +17,157 @@ import {
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "./base"
 
-const STT_MODEL_OPTIONS = [
-  "deepgram/flux-general",
-  "deepgram/nova-3",
-  "deepgram/nova-3-medical",
-  "deepgram/nova-2",
-  "deepgram/nova-2-medical",
-  "deepgram/nova-2-conversationalai",
-  "deepgram/nova-2-phonecall",
-  "cartesia/ink-whisper",
-  "assemblyai/universal-streaming",
-  "assemblyai/universal-streaming-multilingual",
-  "elevenlabs/scribe_v2_realtime",
-  "xai/stt-1",
-] as const
+function ProviderModelSelect({
+  kind,
+  label,
+  modelId,
+  onModelChange,
+}: {
+  kind: ModelKind
+  label: string
+  modelId: string
+  onModelChange: (modelId: string) => void
+}) {
+  const providerId = getProviderId(kind, modelId)
+  const sections = getModelSections(kind, modelId)
+  const section = sections.find((entry) => entry.id === providerId)
+  const models = section?.models ?? []
 
-const LLM_MODEL_OPTIONS = [
-  "openai/gpt-5.4",
-  "openai/gpt-5.3-chat-latest",
-  "openai/gpt-5.2",
-  "openai/gpt-5.2-chat-latest",
-  "openai/gpt-5.1",
-  "openai/gpt-5.1-chat-latest",
-  "openai/gpt-5",
-  "openai/gpt-5-mini",
-  "openai/gpt-5-nano",
-  "openai/gpt-4.1",
-  "openai/gpt-4.1-mini",
-  "openai/gpt-4.1-nano",
-  "openai/gpt-4o",
-  "openai/gpt-4o-mini",
-  "openai/gpt-oss-120b",
-  "google/gemini-3-pro",
-  "google/gemini-3-flash",
-  "google/gemini-2.5-pro",
-  "google/gemini-2.5-flash",
-  "google/gemini-2.5-flash-lite",
-  "google/gemini-2.0-flash",
-  "google/gemini-2.0-flash-lite",
-  "moonshotai/kimi-k2-instruct",
-  "deepseek-ai/deepseek-v3",
-  "deepseek-ai/deepseek-v3.2",
-  "xai/grok-4-1-fast-non-reasoning",
-  "xai/grok-4-1-fast-reasoning",
-  "xai/grok-4.20-0309-non-reasoning",
-  "xai/grok-4.20-0309-reasoning",
-  "xai/grok-4.20-multi-agent-0309",
-] as const
+  return (
+    <div className="grid grid-cols-2 items-end gap-4">
+      <Field>
+        <FieldLabel>{label}</FieldLabel>
+        <Select
+          value={providerId}
+          onValueChange={(nextProviderId) => {
+            if (!nextProviderId) return
+            const nextModel = pickFirstModel(kind, nextProviderId)
+            if (nextModel) {
+              onModelChange(nextModel)
+            }
+          }}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder={`Select ${label} provider`}>
+              {section?.name}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {sections.map((entry) => (
+              <SelectItem key={entry.id} value={entry.id}>
+                {entry.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </Field>
 
-const TTS_MODEL_OPTIONS = [
-  "cartesia/sonic-3",
-  "cartesia/sonic-2",
-  "cartesia/sonic-turbo",
-  "cartesia/sonic",
-  "deepgram/aura",
-  "deepgram/aura-2",
-  "elevenlabs/eleven_flash_v2",
-  "elevenlabs/eleven_flash_v2_5",
-  "elevenlabs/eleven_turbo_v2",
-  "elevenlabs/eleven_turbo_v2_5",
-  "elevenlabs/eleven_multilingual_v2",
-  "inworld/inworld-tts-2",
-  "inworld/inworld-tts-1.5-max",
-  "inworld/inworld-tts-1.5-mini",
-  "inworld/inworld-tts-1-max",
-  "inworld/inworld-tts-1",
-  "rime/arcana",
-  "rime/mistv2",
-] as const
+      <Field>
+        <Select
+          value={modelId}
+          onValueChange={(nextModelId) => {
+            if (nextModelId) onModelChange(nextModelId)
+          }}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder={`Select ${label} model`}>
+              {models.find((model) => model.id === modelId)?.name ?? modelId}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {models.map((model) => (
+              <SelectItem key={model.id} value={model.id}>
+                {model.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </Field>
+    </div>
+  )
+}
 
 export function ModelsConfigPanel() {
   const draftConfig = useAgentStore((state) => state.draftConfig)
   const setConfig = useAgentStore((state) => state.setConfig)
 
+  const ttsModelId = draftConfig.tts.model
+  const ttsVoices = getVoices(ttsModelId)
+  const ttsVoiceId = pickFirstVoice(ttsModelId, draftConfig.tts.voice)
+  const ttsVoice = ttsVoices.find((voice) => voice.id === ttsVoiceId)
+
   return (
     <FlowSidePanelBase title="Models">
       <FieldGroup>
+        <ProviderModelSelect
+          kind="stt"
+          label="STT"
+          modelId={draftConfig.stt.model}
+          onModelChange={(model) => {
+            setConfig({
+              ...draftConfig,
+              stt: { ...draftConfig.stt, model },
+            })
+          }}
+        />
+
+        <ProviderModelSelect
+          kind="llm"
+          label="LLM"
+          modelId={draftConfig.llm.model}
+          onModelChange={(model) => {
+            setConfig({
+              ...draftConfig,
+              llm: { ...draftConfig.llm, model },
+            })
+          }}
+        />
+
+        <ProviderModelSelect
+          kind="tts"
+          label="TTS"
+          modelId={ttsModelId}
+          onModelChange={(model) => {
+            setConfig({
+              ...draftConfig,
+              tts: {
+                ...draftConfig.tts,
+                model,
+                voice: pickFirstVoice(model, draftConfig.tts.voice),
+              },
+            })
+          }}
+        />
+
         <Field>
-          <FieldLabel>STT</FieldLabel>
+          <FieldLabel>Voice</FieldLabel>
           <Select
-            value={draftConfig.stt.model}
-            onValueChange={(model) => {
-              if (!model) return
+            value={ttsVoiceId ?? ""}
+            onValueChange={(voice) => {
+              if (!voice) return
               setConfig({
                 ...draftConfig,
-                stt: { ...draftConfig.stt, model },
+                tts: { ...draftConfig.tts, voice },
               })
             }}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select STT model" />
+              <SelectValue placeholder="Select voice">
+                {ttsVoice?.name}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {STT_MODEL_OPTIONS.map((model) => (
-                <SelectItem key={model} value={model}>
-                  {model}
+              {ttsVoices.map((voice) => (
+                <SelectItem key={voice.id} value={voice.id}>
+                  <span className="font-medium">{voice.name}</span>
+                  <span className="text-muted-foreground">
+                    {" "}
+                    - {voice.description}
+                  </span>
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-        </Field>
-
-        <Field>
-          <FieldLabel>LLM</FieldLabel>
-          <Select
-            value={draftConfig.llm.model}
-            onValueChange={(model) => {
-              if (!model) return
-              setConfig({
-                ...draftConfig,
-                llm: { ...draftConfig.llm, model },
-              })
-            }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select LLM model" />
-            </SelectTrigger>
-            <SelectContent>
-              {LLM_MODEL_OPTIONS.map((model) => (
-                <SelectItem key={model} value={model}>
-                  {model}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-
-        <Field>
-          <FieldLabel>TTS</FieldLabel>
-          <Select
-            value={draftConfig.tts.model}
-            onValueChange={(model) => {
-              if (!model) return
-              setConfig({
-                ...draftConfig,
-                tts: { ...draftConfig.tts, model },
-              })
-            }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select TTS model" />
-            </SelectTrigger>
-            <SelectContent>
-              {TTS_MODEL_OPTIONS.map((model) => (
-                <SelectItem key={model} value={model}>
-                  {model}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-
-        <Field>
-          <FieldLabel>TTS voice</FieldLabel>
-          <Input
-            value={draftConfig.tts.voice ?? ""}
-            onChange={(event) =>
-              setConfig({
-                ...draftConfig,
-                tts: { ...draftConfig.tts, voice: event.target.value },
-              })
-            }
-            placeholder="Voice id or name"
-          />
         </Field>
       </FieldGroup>
     </FlowSidePanelBase>
