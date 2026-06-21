@@ -21,6 +21,7 @@ import { Route as authorizedCreateOrganizationPageRouteImport } from './routes/(
 import { Route as authorizedorganizationsidebarLayoutRouteImport } from './routes/(authorized)/(organization)/(sidebar)/layout'
 import { Route as authorizedorganizationsidebarPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/page'
 import { Route as authorizedorganizationsidebarPhoneNumbersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/phone-numbers/page'
+import { Route as authorizedorganizationsidebarCallsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/calls/page'
 import { Route as authorizedorganizationsidebarAgentsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/page'
 import { Route as authorizedorganizationsidebarSplatPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/$/page'
 import { Route as authorizedorganizationsidebarAgentsAgentIdPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/$agentId/page'
@@ -89,6 +90,12 @@ const authorizedorganizationsidebarPhoneNumbersPageRoute =
     path: '/phone-numbers/',
     getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
   } as any)
+const authorizedorganizationsidebarCallsPageRoute =
+  authorizedorganizationsidebarCallsPageRouteImport.update({
+    id: '/calls/',
+    path: '/calls/',
+    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
+  } as any)
 const authorizedorganizationsidebarAgentsPageRoute =
   authorizedorganizationsidebarAgentsPageRouteImport.update({
     id: '/agents/',
@@ -118,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/': typeof authorizedorganizationsidebarPageRoute
   '/$/': typeof authorizedorganizationsidebarSplatPageRoute
   '/agents/': typeof authorizedorganizationsidebarAgentsPageRoute
+  '/calls/': typeof authorizedorganizationsidebarCallsPageRoute
   '/phone-numbers/': typeof authorizedorganizationsidebarPhoneNumbersPageRoute
   '/agents/$agentId/': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
 }
@@ -131,6 +139,7 @@ export interface FileRoutesByTo {
   '/': typeof authorizedorganizationsidebarPageRoute
   '/$': typeof authorizedorganizationsidebarSplatPageRoute
   '/agents': typeof authorizedorganizationsidebarAgentsPageRoute
+  '/calls': typeof authorizedorganizationsidebarCallsPageRoute
   '/phone-numbers': typeof authorizedorganizationsidebarPhoneNumbersPageRoute
   '/agents/$agentId': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
 }
@@ -149,6 +158,7 @@ export interface FileRoutesById {
   '/(authorized)/(organization)/(sidebar)/': typeof authorizedorganizationsidebarPageRoute
   '/(authorized)/(organization)/(sidebar)/$/': typeof authorizedorganizationsidebarSplatPageRoute
   '/(authorized)/(organization)/(sidebar)/agents/': typeof authorizedorganizationsidebarAgentsPageRoute
+  '/(authorized)/(organization)/(sidebar)/calls/': typeof authorizedorganizationsidebarCallsPageRoute
   '/(authorized)/(organization)/(sidebar)/phone-numbers/': typeof authorizedorganizationsidebarPhoneNumbersPageRoute
   '/(authorized)/(organization)/(sidebar)/agents/$agentId/': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
 }
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$/'
     | '/agents/'
+    | '/calls/'
     | '/phone-numbers/'
     | '/agents/$agentId/'
   fileRoutesByTo: FileRoutesByTo
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/agents'
+    | '/calls'
     | '/phone-numbers'
     | '/agents/$agentId'
   id:
@@ -194,6 +206,7 @@ export interface FileRouteTypes {
     | '/(authorized)/(organization)/(sidebar)/'
     | '/(authorized)/(organization)/(sidebar)/$/'
     | '/(authorized)/(organization)/(sidebar)/agents/'
+    | '/(authorized)/(organization)/(sidebar)/calls/'
     | '/(authorized)/(organization)/(sidebar)/phone-numbers/'
     | '/(authorized)/(organization)/(sidebar)/agents/$agentId/'
   fileRoutesById: FileRoutesById
@@ -289,6 +302,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationsidebarPhoneNumbersPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
+    '/(authorized)/(organization)/(sidebar)/calls/': {
+      id: '/(authorized)/(organization)/(sidebar)/calls/'
+      path: '/calls'
+      fullPath: '/calls/'
+      preLoaderRoute: typeof authorizedorganizationsidebarCallsPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
+    }
     '/(authorized)/(organization)/(sidebar)/agents/': {
       id: '/(authorized)/(organization)/(sidebar)/agents/'
       path: '/agents'
@@ -317,6 +337,7 @@ interface authorizedorganizationsidebarLayoutRouteChildren {
   authorizedorganizationsidebarPageRoute: typeof authorizedorganizationsidebarPageRoute
   authorizedorganizationsidebarSplatPageRoute: typeof authorizedorganizationsidebarSplatPageRoute
   authorizedorganizationsidebarAgentsPageRoute: typeof authorizedorganizationsidebarAgentsPageRoute
+  authorizedorganizationsidebarCallsPageRoute: typeof authorizedorganizationsidebarCallsPageRoute
   authorizedorganizationsidebarPhoneNumbersPageRoute: typeof authorizedorganizationsidebarPhoneNumbersPageRoute
   authorizedorganizationsidebarAgentsAgentIdPageRoute: typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
 }
@@ -329,6 +350,8 @@ const authorizedorganizationsidebarLayoutRouteChildren: authorizedorganizationsi
       authorizedorganizationsidebarSplatPageRoute,
     authorizedorganizationsidebarAgentsPageRoute:
       authorizedorganizationsidebarAgentsPageRoute,
+    authorizedorganizationsidebarCallsPageRoute:
+      authorizedorganizationsidebarCallsPageRoute,
     authorizedorganizationsidebarPhoneNumbersPageRoute:
       authorizedorganizationsidebarPhoneNumbersPageRoute,
     authorizedorganizationsidebarAgentsAgentIdPageRoute:

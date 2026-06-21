@@ -9,9 +9,11 @@ import {
   startWebCallInputSchema,
 } from "@workspace/shared/calls/schemas"
 import type {
+  CallListItem,
   CompleteCallResponse,
   StartCallResponse,
 } from "@workspace/shared/calls/types"
+import { requireOrganization } from "@/lib/auth/organization"
 import { requireAuthToken } from "@/lib/auth/token"
 import { validator } from "@/lib/validator"
 
@@ -224,3 +226,57 @@ callRoutes.post(
     }
   }
 )
+
+callRoutes.get("/", requireOrganization, async (c) => {
+  const organizationId = c.get("organizationId")
+
+  try {
+    const calls = await db.query.callsTable.findMany({
+      where: {
+        organizationId,
+      },
+      with: {
+        agent: {
+          columns: {
+            name: true,
+          },
+        },
+        agentVersion: {
+          columns: {
+            number: true,
+          },
+        },
+      },
+      orderBy: {
+        startedAt: "desc",
+      },
+    })
+
+    return c.json(
+      calls.map(
+        (call): CallListItem => ({
+          id: call.id,
+          organizationId: call.organizationId,
+          agentId: call.agentId,
+          agentVersionId: call.agentVersionId,
+          channel: call.channel,
+          fromNumber: call.fromNumber,
+          toNumber: call.toNumber,
+          livekitRoomName: call.livekitRoomName,
+          startedAt: call.startedAt,
+          endedAt: call.endedAt,
+          status: call.endedAt ? "completed" : "ongoing",
+          durationMs: call.endedAt
+            ? call.endedAt.getTime() - call.startedAt.getTime()
+            : null,
+          createdAt: call.createdAt,
+          updatedAt: call.updatedAt,
+          agent: call.agent,
+          agentVersion: call.agentVersion,
+        })
+      ) satisfies CallListItem[]
+    )
+  } catch {
+    return c.json({ error: "Failed to load calls" }, 500)
+  }
+})

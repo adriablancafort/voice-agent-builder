@@ -7,6 +7,9 @@ import type {
   startWebCallInputSchema,
 } from "./schemas"
 
+export type CallChannel = "web_call" | "phone_call"
+export type CallStatus = "ongoing" | "completed"
+
 export type StartWebCallInput = z.infer<typeof startWebCallInputSchema>
 export type StartPhoneCallInput = z.infer<typeof startPhoneCallInputSchema>
 export type CompleteCallInput = z.infer<typeof completeCallInputSchema>
@@ -19,4 +22,23 @@ export type StartCallResponse = {
 export type CompleteCallResponse = {
   id: string
   durationMs: number
+}
+
+export type CallListItem = {
+  id: string
+  organizationId: string
+  agentId: string
+  agentVersionId: string | null
+  channel: CallChannel
+  fromNumber: string | null
+  toNumber: string | null
+  livekitRoomName: string
+  startedAt: Date
+  endedAt: Date | null
+  status: CallStatus
+  durationMs: number | null
+  createdAt: Date
+  updatedAt: Date
+  agent: { name: string } | null
+  agentVersion: { number: number } | null
 }
