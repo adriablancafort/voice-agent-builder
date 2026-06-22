@@ -15,6 +15,7 @@ import type {
 } from "@workspace/shared/calls/types"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requireAuthToken } from "@/lib/auth/token"
+import { computeCallCosts } from "@/lib/call-cost"
 import { validator } from "@/lib/validator"
 
 export const callRoutes = new Hono()
@@ -72,6 +73,9 @@ callRoutes.post(
           agentId: agent.id,
           agentVersionId,
           channel: "web_call",
+          sttModel: config.stt.model,
+          llmModel: config.llm.model,
+          ttsModel: config.tts.model,
           livekitRoomName: payload.livekitRoomName,
           startedAt: new Date(payload.startedAt),
         })
@@ -160,6 +164,9 @@ callRoutes.post(
           channel: "phone_call",
           fromNumber: payload.fromNumber ?? null,
           toNumber: payload.toNumber,
+          sttModel: config.stt.model,
+          llmModel: config.llm.model,
+          ttsModel: config.tts.model,
           livekitRoomName: payload.livekitRoomName,
           startedAt: new Date(payload.startedAt),
         })
@@ -207,11 +214,25 @@ callRoutes.post(
       }
 
       const durationMs = endedAt.getTime() - call.startedAt.getTime()
+      const costs = computeCallCosts({
+        durationMs,
+        channel: call.channel,
+        sttModel: call.sttModel,
+        llmModel: call.llmModel,
+        ttsModel: call.ttsModel,
+      })
 
       const [updated] = await db
         .update(callsTable)
         .set({
           endedAt,
+          durationMs,
+          sttCost: costs.stt.toFixed(6),
+          llmCost: costs.llm.toFixed(6),
+          ttsCost: costs.tts.toFixed(6),
+          telephonyCost: costs.telephony.toFixed(6),
+          platformCost: costs.platform.toFixed(6),
+          totalCost: costs.total.toFixed(6),
           updatedAt: new Date(),
         })
         .where(eq(callsTable.id, payload.callId))
@@ -252,30 +273,7 @@ callRoutes.get("/", requireOrganization, async (c) => {
       },
     })
 
-    return c.json(
-      calls.map(
-        (call): CallListItem => ({
-          id: call.id,
-          organizationId: call.organizationId,
-          agentId: call.agentId,
-          agentVersionId: call.agentVersionId,
-          channel: call.channel,
-          fromNumber: call.fromNumber,
-          toNumber: call.toNumber,
-          livekitRoomName: call.livekitRoomName,
-          startedAt: call.startedAt,
-          endedAt: call.endedAt,
-          status: call.endedAt ? "completed" : "ongoing",
-          durationMs: call.endedAt
-            ? call.endedAt.getTime() - call.startedAt.getTime()
-            : null,
-          createdAt: call.createdAt,
-          updatedAt: call.updatedAt,
-          agent: call.agent,
-          agentVersion: call.agentVersion,
-        })
-      ) satisfies CallListItem[]
-    )
+    return c.json(calls satisfies CallListItem[])
   } catch {
     return c.json({ error: "Failed to load calls" }, 500)
   }

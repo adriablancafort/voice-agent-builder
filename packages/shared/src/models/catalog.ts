@@ -3,9 +3,14 @@ export const MODELS = {
     deepgram: {
       name: "Deepgram",
       models: {
-        "flux-general-en": { name: "Flux", languages: ["en"] },
+        "flux-general-en": {
+          name: "Flux",
+          languages: ["en"],
+          usdPerMinute: 0.0065,
+        },
         "flux-general-multi": {
           name: "Flux (Multilingual)",
+          usdPerMinute: 0.0078,
           languages: [
             "multi",
             "en",
@@ -22,6 +27,7 @@ export const MODELS = {
         },
         "nova-3": {
           name: "Nova-3",
+          usdPerMinute: 0.0058,
           languages: [
             "ar",
             "ar-AE",
@@ -108,6 +114,7 @@ export const MODELS = {
         },
         "nova-3-medical": {
           name: "Nova-3 Medical",
+          usdPerMinute: 0.0077,
           languages: [
             "en",
             "en-US",
@@ -121,6 +128,7 @@ export const MODELS = {
         },
         "nova-2": {
           name: "Nova-2",
+          usdPerMinute: 0.0058,
           languages: [
             "multi",
             "bg",
@@ -180,14 +188,17 @@ export const MODELS = {
         },
         "nova-2-conversationalai": {
           name: "Nova-2 Conversational AI",
+          usdPerMinute: 0.0058,
           languages: ["en", "en-US"],
         },
         "nova-2-medical": {
           name: "Nova-2 Medical",
+          usdPerMinute: 0.0058,
           languages: ["en", "en-US"],
         },
         "nova-2-phonecall": {
           name: "Nova-2 Phone Call",
+          usdPerMinute: 0.0058,
           languages: ["en", "en-US"],
         },
       },
@@ -197,6 +208,7 @@ export const MODELS = {
       models: {
         "u3-rt-pro": {
           name: "Universal-3 Pro Streaming",
+          usdPerMinute: 0.0075,
           languages: [
             "en",
             "en-US",
@@ -245,6 +257,7 @@ export const MODELS = {
         },
         "universal-3-5-pro": {
           name: "Universal-3.5 Pro Streaming",
+          usdPerMinute: 0.0075,
           languages: [
             "en",
             "en-US",
@@ -306,10 +319,12 @@ export const MODELS = {
         },
         "universal-streaming": {
           name: "Universal-Streaming",
+          usdPerMinute: 0.0025,
           languages: ["en", "en-US"],
         },
         "universal-streaming-multilingual": {
           name: "Universal-Streaming-Multilingual",
+          usdPerMinute: 0.0025,
           languages: [
             "multi",
             "en",
@@ -362,9 +377,10 @@ export const MODELS = {
     cartesia: {
       name: "Cartesia",
       models: {
-        "ink-2": { name: "Ink 2", languages: ["en"] },
+        "ink-2": { name: "Ink 2", languages: ["en"], usdPerMinute: 0.009 },
         "ink-whisper": {
           name: "Ink Whisper",
+          usdPerMinute: 0.003,
           languages: [
             "en",
             "zh",
@@ -475,6 +491,7 @@ export const MODELS = {
       models: {
         scribe_v2_realtime: {
           name: "Scribe v2 Realtime",
+          usdPerMinute: 0.0105,
           languages: [
             "af",
             "afr",
@@ -675,6 +692,7 @@ export const MODELS = {
       models: {
         enhanced: {
           name: "Speechmatics Enhanced",
+          usdPerMinute: 0.0117,
           languages: [
             "ar",
             "ar_en",
@@ -741,6 +759,7 @@ export const MODELS = {
         },
         standard: {
           name: "Speechmatics Standard",
+          usdPerMinute: 0.005,
           languages: [
             "ar",
             "ar_en",
@@ -813,6 +832,7 @@ export const MODELS = {
       models: {
         "stt-1": {
           name: "Speech to Text",
+          usdPerMinute: 0.0033,
           languages: [
             "en",
             "ar",
@@ -848,56 +868,89 @@ export const MODELS = {
     "deepseek-ai": {
       name: "DeepSeek",
       models: {
-        "deepseek-v4-pro": { name: "DeepSeek-V4 Pro" },
+        "deepseek-v4-pro": { name: "DeepSeek-V4 Pro", usdPerMinute: 0.0058 },
       },
     },
     google: {
       name: "Google",
       models: {
-        "gemini-2.5-flash": { name: "Gemini 2.5 Flash" },
-        "gemini-2.5-flash-lite": { name: "Gemini 2.5 Flash-Lite" },
-        "gemini-2.5-pro": { name: "Gemini 2.5 Pro" },
-        "gemini-3-flash-preview": { name: "Gemini 3 Flash" },
-        "gemini-3.1-flash-lite": { name: "Gemini 3.1 Flash Lite" },
-        "gemini-3.1-pro-preview": { name: "Gemini 3.1 Pro" },
-        "gemini-3.5-flash": { name: "Gemini 3.5 Flash" },
+        "gemini-2.5-flash": {
+          name: "Gemini 2.5 Flash",
+          usdPerMinute: 0.0013,
+        },
+        "gemini-2.5-flash-lite": {
+          name: "Gemini 2.5 Flash-Lite",
+          usdPerMinute: 0.0004,
+        },
+        "gemini-2.5-pro": { name: "Gemini 2.5 Pro", usdPerMinute: 0.0101 },
+        "gemini-3-flash-preview": {
+          name: "Gemini 3 Flash",
+          usdPerMinute: 0.002,
+        },
+        "gemini-3.1-flash-lite": {
+          name: "Gemini 3.1 Flash Lite",
+          usdPerMinute: 0.001,
+        },
+        "gemini-3.1-pro-preview": {
+          name: "Gemini 3.1 Pro",
+          usdPerMinute: 0.0152,
+        },
+        "gemini-3.5-flash": {
+          name: "Gemini 3.5 Flash",
+          usdPerMinute: 0.0061,
+        },
       },
     },
     moonshotai: {
       name: "Moonshot AI",
       models: {
-        "kimi-k2.5": { name: "Kimi K2.5" },
+        "kimi-k2.5": { name: "Kimi K2.5", usdPerMinute: 0.0023 },
       },
     },
     openai: {
       name: "OpenAI",
       models: {
-        "chat-latest": { name: "ChatGPT Latest" },
-        "gpt-4.1": { name: "GPT-4.1" },
-        "gpt-4.1-mini": { name: "GPT-4.1 mini" },
-        "gpt-4.1-nano": { name: "GPT-4.1 nano" },
-        "gpt-4o": { name: "GPT-4o" },
-        "gpt-4o-mini": { name: "GPT-4o mini" },
-        "gpt-5": { name: "GPT-5" },
-        "gpt-5-mini": { name: "GPT-5 mini" },
-        "gpt-5-nano": { name: "GPT-5 nano" },
-        "gpt-5.1": { name: "GPT-5.1" },
-        "gpt-5.2": { name: "GPT-5.2" },
-        "gpt-5.4": { name: "GPT-5.4" },
-        "gpt-5.4-mini": { name: "GPT-5.4 mini" },
-        "gpt-5.4-nano": { name: "GPT-5.4 nano" },
-        "gpt-5.5": { name: "GPT-5.5" },
-        "gpt-oss-120b": { name: "GPT OSS 120B" },
+        "chat-latest": { name: "ChatGPT Latest", usdPerMinute: 0.0203 },
+        "gpt-4.1": { name: "GPT-4.1", usdPerMinute: 0.0074 },
+        "gpt-4.1-mini": { name: "GPT-4.1 mini", usdPerMinute: 0.0015 },
+        "gpt-4.1-nano": { name: "GPT-4.1 nano", usdPerMinute: 0.0004 },
+        "gpt-4o": { name: "GPT-4o", usdPerMinute: 0.0093 },
+        "gpt-4o-mini": { name: "GPT-4o mini", usdPerMinute: 0.0006 },
+        "gpt-5": { name: "GPT-5", usdPerMinute: 0.0055 },
+        "gpt-5-mini": { name: "GPT-5 mini", usdPerMinute: 0.0011 },
+        "gpt-5-nano": { name: "GPT-5 nano", usdPerMinute: 0.0002 },
+        "gpt-5.1": { name: "GPT-5.1", usdPerMinute: 0.0055 },
+        "gpt-5.2": { name: "GPT-5.2", usdPerMinute: 0.0077 },
+        "gpt-5.4": { name: "GPT-5.4", usdPerMinute: 0.0189 },
+        "gpt-5.4-mini": { name: "GPT-5.4 mini", usdPerMinute: 0.003 },
+        "gpt-5.4-nano": { name: "GPT-5.4 nano", usdPerMinute: 0.0008 },
+        "gpt-5.5": { name: "GPT-5.5", usdPerMinute: 0.0379 },
+        "gpt-oss-120b": { name: "GPT OSS 120B", usdPerMinute: 0.0006 },
       },
     },
     xai: {
       name: "xAI",
       models: {
-        "grok-4-1-fast-non-reasoning": { name: "Grok 4.1 Fast" },
-        "grok-4-1-fast-reasoning": { name: "Grok 4.1 Fast Reasoning" },
-        "grok-4.20-0309-non-reasoning": { name: "Grok 4.20" },
-        "grok-4.20-0309-reasoning": { name: "Grok 4.20 Reasoning" },
-        "grok-4.20-multi-agent-0309": { name: "Grok 4.20 Multi-Agent" },
+        "grok-4-1-fast-non-reasoning": {
+          name: "Grok 4.1 Fast",
+          usdPerMinute: 0.0007,
+        },
+        "grok-4-1-fast-reasoning": {
+          name: "Grok 4.1 Fast Reasoning",
+          usdPerMinute: 0.0007,
+        },
+        "grok-4.20-0309-non-reasoning": {
+          name: "Grok 4.20",
+          usdPerMinute: 0.007,
+        },
+        "grok-4.20-0309-reasoning": {
+          name: "Grok 4.20 Reasoning",
+          usdPerMinute: 0.007,
+        },
+        "grok-4.20-multi-agent-0309": {
+          name: "Grok 4.20 Multi-Agent",
+          usdPerMinute: 0.007,
+        },
       },
     },
   },
@@ -907,10 +960,12 @@ export const MODELS = {
       models: {
         "sonic-2": {
           name: "Sonic 2",
+          usdPerMinute: 0.03,
           languages: ["en", "fr", "de", "es", "pt", "zh", "ja", "ko"],
         },
         "sonic-3": {
           name: "Sonic 3",
+          usdPerMinute: 0.03,
           languages: [
             "en",
             "de",
@@ -958,6 +1013,7 @@ export const MODELS = {
         },
         "sonic-3-2025-10-27": {
           name: "Sonic 3 (2025-10-27)",
+          usdPerMinute: 0.03,
           languages: [
             "en",
             "de",
@@ -1005,6 +1061,7 @@ export const MODELS = {
         },
         "sonic-3-2026-01-12": {
           name: "Sonic 3 (2026-01-12)",
+          usdPerMinute: 0.03,
           languages: [
             "en",
             "de",
@@ -1052,6 +1109,7 @@ export const MODELS = {
         },
         "sonic-3-latest": {
           name: "Sonic 3 Latest",
+          usdPerMinute: 0.03,
           languages: [
             "en",
             "de",
@@ -1099,6 +1157,7 @@ export const MODELS = {
         },
         "sonic-3.5": {
           name: "Sonic 3.5",
+          usdPerMinute: 0.03,
           languages: [
             "en",
             "de",
@@ -1144,6 +1203,7 @@ export const MODELS = {
         },
         "sonic-3.5-2026-05-04": {
           name: "Sonic 3.5 (2026-05-04)",
+          usdPerMinute: 0.03,
           languages: [
             "en",
             "de",
@@ -1189,6 +1249,7 @@ export const MODELS = {
         },
         "sonic-latest": {
           name: "Sonic Latest",
+          usdPerMinute: 0.03,
           languages: [
             "en",
             "de",
@@ -1234,6 +1295,7 @@ export const MODELS = {
         },
         "sonic-turbo": {
           name: "Sonic Turbo",
+          usdPerMinute: 0.03,
           languages: ["en", "fr", "de", "es", "pt", "zh", "ja", "hi", "ko"],
         },
       },
@@ -1243,6 +1305,7 @@ export const MODELS = {
       models: {
         "aura-2": {
           name: "Aura-2",
+          usdPerMinute: 0.018,
           languages: [
             "en",
             "en-US",
@@ -1272,9 +1335,14 @@ export const MODELS = {
     elevenlabs: {
       name: "ElevenLabs",
       models: {
-        eleven_flash_v2: { name: "Eleven Flash v2", languages: ["en"] },
+        eleven_flash_v2: {
+          name: "Eleven Flash v2",
+          languages: ["en"],
+          usdPerMinute: 0.09,
+        },
         eleven_flash_v2_5: {
           name: "Eleven Flash v2.5",
+          usdPerMinute: 0.09,
           languages: [
             "en",
             "ja",
@@ -1312,6 +1380,7 @@ export const MODELS = {
         },
         eleven_multilingual_v2: {
           name: "Eleven Multilingual v2",
+          usdPerMinute: 0.18,
           languages: [
             "en",
             "ja",
@@ -1344,9 +1413,14 @@ export const MODELS = {
             "ru",
           ],
         },
-        eleven_turbo_v2: { name: "Eleven Turbo v2", languages: ["en"] },
+        eleven_turbo_v2: {
+          name: "Eleven Turbo v2",
+          languages: ["en"],
+          usdPerMinute: 0.09,
+        },
         eleven_turbo_v2_5: {
           name: "Eleven Turbo v2.5",
+          usdPerMinute: 0.09,
           languages: [
             "en",
             "ja",
@@ -1384,6 +1458,7 @@ export const MODELS = {
         },
         eleven_v3: {
           name: "Eleven v3",
+          usdPerMinute: 0.18,
           languages: [
             "en",
             "ja",
@@ -1426,6 +1501,7 @@ export const MODELS = {
       models: {
         "inworld-tts-1.5-max": {
           name: "Realtime TTS 1.5 Max",
+          usdPerMinute: 0.021,
           languages: [
             "en",
             "zh",
@@ -1446,6 +1522,7 @@ export const MODELS = {
         },
         "inworld-tts-1.5-mini": {
           name: "Realtime TTS 1.5 Mini",
+          usdPerMinute: 0.009,
           languages: [
             "en",
             "zh",
@@ -1466,6 +1543,7 @@ export const MODELS = {
         },
         "inworld-tts-2": {
           name: "Realtime TTS 2.0",
+          usdPerMinute: 0.015,
           languages: [
             "en",
             "zh",
@@ -1491,13 +1569,23 @@ export const MODELS = {
       models: {
         arcana: {
           name: "Arcana",
+          usdPerMinute: 0.024,
           languages: ["en", "es", "fr", "de", "hi", "he", "ja", "pt", "ar"],
         },
-        coda: { name: "Coda", languages: ["en", "es", "fr", "de", "pt", "ja"] },
-        mist: { name: "Mist", languages: ["en"] },
-        mistv2: { name: "Mist v2", languages: ["en", "es", "fr", "de"] },
+        coda: {
+          name: "Coda",
+          languages: ["en", "es", "fr", "de", "pt", "ja"],
+          usdPerMinute: 0.03,
+        },
+        mist: { name: "Mist", languages: ["en"], usdPerMinute: 0.018 },
+        mistv2: {
+          name: "Mist v2",
+          languages: ["en", "es", "fr", "de"],
+          usdPerMinute: 0.018,
+        },
         mistv3: {
           name: "Mist v3",
+          usdPerMinute: 0.018,
           languages: ["en", "es", "fr", "de", "hi", "xAI"],
         },
       },
@@ -1505,7 +1593,7 @@ export const MODELS = {
     xai: {
       name: "xAI",
       models: {
-        "tts-1": { name: "Text to Speech" },
+        "tts-1": { name: "Text to Speech", usdPerMinute: 0.009 },
       },
     },
   },

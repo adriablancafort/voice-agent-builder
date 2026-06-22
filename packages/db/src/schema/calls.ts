@@ -1,5 +1,6 @@
 import {
   index,
+  integer,
   numeric,
   pgTable,
   text,
@@ -32,6 +33,15 @@ export const callsTable = pgTable(
       mode: "date",
     }).notNull(),
     endedAt: timestamp("ended_at", { withTimezone: true, mode: "date" }),
+    durationMs: integer("duration_ms"),
+    sttModel: text("stt_model").notNull(),
+    llmModel: text("llm_model").notNull(),
+    ttsModel: text("tts_model").notNull(),
+    sttCost: numeric("stt_cost", { precision: 12, scale: 6 }),
+    llmCost: numeric("llm_cost", { precision: 12, scale: 6 }),
+    ttsCost: numeric("tts_cost", { precision: 12, scale: 6 }),
+    telephonyCost: numeric("telephony_cost", { precision: 12, scale: 6 }),
+    platformCost: numeric("platform_cost", { precision: 12, scale: 6 }),
     totalCost: numeric("total_cost", { precision: 12, scale: 6 }),
     livekitRoomName: text("livekit_room_name").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })

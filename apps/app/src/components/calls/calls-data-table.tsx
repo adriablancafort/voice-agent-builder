@@ -6,10 +6,16 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import { CircleHelpIcon } from "lucide-react"
 import { useState } from "react"
 
 import type { CallListItem } from "@workspace/shared/calls/types"
 import { Badge } from "@workspace/ui/components/badge"
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@workspace/ui/components/hover-card"
 import { Input } from "@workspace/ui/components/input"
 import {
   Table,
@@ -30,6 +36,60 @@ const secondsFormatter = new Intl.NumberFormat("en", {
   maximumFractionDigits: 2,
 })
 
+const usdFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 4,
+})
+
+function parseCost(value: string | null) {
+  return value === null ? null : Number(value)
+}
+
+function CostCell({ call }: { call: CallListItem }) {
+  const totalCost = parseCost(call.totalCost)
+
+  if (totalCost === null) {
+    return null
+  }
+
+  const breakdown = [
+    { label: "STT", model: call.sttModel, cost: parseCost(call.sttCost)! },
+    { label: "LLM", model: call.llmModel, cost: parseCost(call.llmCost)! },
+    { label: "TTS", model: call.ttsModel, cost: parseCost(call.ttsCost)! },
+    { label: "Telephony", model: null, cost: parseCost(call.telephonyCost)! },
+    { label: "Platform", model: null, cost: parseCost(call.platformCost)! },
+  ].filter((item) => item.cost > 0)
+
+  return (
+    <HoverCard>
+      <HoverCardTrigger className="inline-flex items-center gap-1">
+        {usdFormatter.format(totalCost)}
+        <CircleHelpIcon className="size-3.5 text-muted-foreground" />
+      </HoverCardTrigger>
+      <HoverCardContent className="flex flex-col gap-2">
+        {breakdown.map((item) => (
+          <div
+            key={item.label}
+            className="flex items-center justify-between gap-3"
+          >
+            <div>
+              <span className="text-xs">{item.label}</span>
+              {item.model ? (
+                <div className="truncate text-xs text-muted-foreground">
+                  {item.model}
+                </div>
+              ) : null}
+            </div>
+            <span className="text-xs">{usdFormatter.format(item.cost)}</span>
+          </div>
+        ))}
+      </HoverCardContent>
+    </HoverCard>
+  )
+}
+
 const columns: ColumnDef<CallListItem>[] = [
   {
     accessorKey: "startedAt",
@@ -43,6 +103,11 @@ const columns: ColumnDef<CallListItem>[] = [
       row.original.durationMs === null
         ? null
         : `${secondsFormatter.format(row.original.durationMs / 1000)}s`,
+  },
+  {
+    id: "cost",
+    header: "Cost",
+    cell: ({ row }) => <CostCell call={row.original} />,
   },
   {
     accessorKey: "channel",
@@ -77,10 +142,8 @@ const columns: ColumnDef<CallListItem>[] = [
     id: "status",
     header: "Status",
     cell: ({ row }) => (
-      <Badge
-        variant={row.original.status === "ongoing" ? "outline" : "secondary"}
-      >
-        {row.original.status}
+      <Badge variant={row.original.endedAt ? "secondary" : "outline"}>
+        {row.original.endedAt ? "completed" : "ongoing"}
       </Badge>
     ),
   },

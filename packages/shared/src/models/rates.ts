@@ -1,0 +1,3 @@
+export const TELEPHONY_USD_PER_MINUTE = 0.004
+
+export const PLATFORM_USD_PER_MINUTE = 0.05

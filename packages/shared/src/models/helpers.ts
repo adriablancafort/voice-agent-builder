@@ -2,9 +2,15 @@ import { MODELS } from "./catalog"
 import type { ModelKind } from "./types"
 import { VOICES } from "./voices"
 
+type CatalogModel = {
+  name: string
+  languages?: readonly string[]
+  usdPerMinute: number
+}
+
 type CatalogProvider = {
   name: string
-  models: Record<string, { name: string; languages?: readonly string[] }>
+  models: Record<string, CatalogModel>
 }
 
 type VoiceEntry = {
@@ -38,6 +44,24 @@ export function getProviderId(kind: ModelKind, modelId: string) {
   return splitModelId(modelId)?.providerId ?? ""
 }
 
+export function getModelPricePerMinute(kind: ModelKind, modelId: string) {
+  const parts = splitModelId(modelId)
+  if (!parts) {
+    throw new Error(`Invalid model id: ${modelId}`)
+  }
+
+  const model = getKindCatalog(kind)[parts.providerId]?.models[parts.modelKey]
+  if (!model) {
+    throw new Error(`Unknown ${kind} model: ${modelId}`)
+  }
+
+  return model.usdPerMinute
+}
+
+export function formatUsdPerMinute(usdPerMinute: number) {
+  return `$${usdPerMinute.toFixed(3)}/min`
+}
+
 export function getModelSections(kind: ModelKind, currentModelId?: string) {
   return Object.entries(getKindCatalog(kind))
     .map(([providerId, provider]) => {
@@ -45,6 +69,7 @@ export function getModelSections(kind: ModelKind, currentModelId?: string) {
         ([modelKey, model]) => ({
           id: toModelId(providerId, modelKey),
           name: model.name,
+          usdPerMinute: model.usdPerMinute,
         })
       )
 
@@ -56,6 +81,7 @@ export function getModelSections(kind: ModelKind, currentModelId?: string) {
         models.unshift({
           id: currentModelId,
           name: currentModelId,
+          usdPerMinute: 0,
         })
       }
 

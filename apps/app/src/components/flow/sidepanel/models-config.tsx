@@ -1,4 +1,5 @@
 import {
+  formatUsdPerMinute,
   getModelSections,
   getProviderId,
   getVoices,
@@ -32,10 +33,12 @@ function ProviderModelSelect({
   const sections = getModelSections(kind, modelId)
   const section = sections.find((entry) => entry.id === providerId)
   const models = section?.models ?? []
+  const selectedModel =
+    models.find((model) => model.id === modelId) ?? models[0]
 
   return (
-    <div className="grid grid-cols-2 items-end gap-4">
-      <Field>
+    <div className="grid grid-cols-5 items-end gap-4">
+      <Field className="col-span-2">
         <FieldLabel>{label}</FieldLabel>
         <Select
           value={providerId}
@@ -62,7 +65,7 @@ function ProviderModelSelect({
         </Select>
       </Field>
 
-      <Field>
+      <Field className="col-span-3">
         <Select
           value={modelId}
           onValueChange={(nextModelId) => {
@@ -71,13 +74,19 @@ function ProviderModelSelect({
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder={`Select ${label} model`}>
-              {models.find((model) => model.id === modelId)?.name ?? modelId}
+              {selectedModel.name}
+              <span className="text-muted-foreground">
+                - {formatUsdPerMinute(selectedModel.usdPerMinute)}
+              </span>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {models.map((model) => (
               <SelectItem key={model.id} value={model.id}>
                 {model.name}
+                <span className="text-muted-foreground">
+                  - {formatUsdPerMinute(model.usdPerMinute)}
+                </span>
               </SelectItem>
             ))}
           </SelectContent>
