@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { agentConfigSchema } from "@workspace/shared/agent-config/schemas"
+import { agentConfigSchema } from "@workspace/shared/api/agent-config/schemas"
 
 const agentNameSchema = z
   .string()

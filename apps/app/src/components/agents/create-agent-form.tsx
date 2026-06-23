@@ -5,7 +5,7 @@ import { PlusIcon } from "lucide-react"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 
-import { createDefaultAgentConfig } from "@workspace/shared/agent-config/defaults"
+import { createDefaultAgentConfig } from "@workspace/shared/agents/templates/defaults"
 import { createAgentRequestSchema } from "@workspace/shared/api/agents/schemas"
 import type {
   AgentDraftResponse,

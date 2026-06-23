@@ -1,4 +1,4 @@
-import type { AgentConfig } from "./types"
+import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 
 export function createDefaultAgentConfig(): AgentConfig {
   return {

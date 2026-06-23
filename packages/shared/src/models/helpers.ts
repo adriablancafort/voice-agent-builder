@@ -1,6 +1,6 @@
-import { MODELS } from "./catalog"
+import { MODELS } from "@workspace/shared/constants/models"
+import { VOICES } from "@workspace/shared/constants/voices"
 import type { ModelKind } from "./types"
-import { VOICES } from "./voices"
 
 type CatalogModel = {
   name: string

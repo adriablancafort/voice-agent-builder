@@ -6,7 +6,7 @@ import {
   getSmoothStepPath,
 } from "@xyflow/react"
 
-import type { FlowEdgeConfig } from "@workspace/shared/agent-config/types"
+import type { FlowEdgeConfig } from "@workspace/shared/api/agent-config/types"
 import { cn } from "@workspace/ui/lib/utils"
 import { useAgentStore } from "@/stores/agent"
 import { FlowEdgeActions } from "./actions"

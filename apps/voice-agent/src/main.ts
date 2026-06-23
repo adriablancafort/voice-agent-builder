@@ -10,7 +10,7 @@ import * as livekit from "@livekit/agents-plugin-livekit"
 import * as silero from "@livekit/agents-plugin-silero"
 import { audioEnhancement } from "@livekit/plugins-ai-coustics"
 
-import type { TurnDetectionConfig } from "@workspace/shared/agent-config/types"
+import type { TurnDetectionConfig } from "@workspace/shared/api/agent-config/types"
 import { FlowAgent } from "@/flow/agent"
 import { buildFlowGraph } from "@/flow/builder"
 import { createVariables } from "@/flow/variables"

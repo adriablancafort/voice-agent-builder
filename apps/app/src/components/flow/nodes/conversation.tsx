@@ -1,7 +1,7 @@
 import { Handle, type Node, type NodeProps, Position } from "@xyflow/react"
 import { Phone, Play } from "lucide-react"
 
-import type { FlowConversationNode } from "@workspace/shared/agent-config/types"
+import type { FlowConversationNode } from "@workspace/shared/api/agent-config/types"
 import { FlowNodeBase } from "./base"
 
 type ConversationNodeType = Node<FlowConversationNode["data"], "conversation">

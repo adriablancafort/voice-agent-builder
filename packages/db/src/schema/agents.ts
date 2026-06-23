@@ -11,7 +11,7 @@ import {
 } from "drizzle-orm/pg-core"
 
 import { organization } from "@workspace/db/schema/auth"
-import type { AgentConfig } from "@workspace/shared/agent-config/types"
+import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 
 export const agentsTable = pgTable(
   "agents",

@@ -1,4 +1,4 @@
-import type { FlowConversationNode } from "@workspace/shared/agent-config/types"
+import type { FlowConversationNode } from "@workspace/shared/api/agent-config/types"
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"

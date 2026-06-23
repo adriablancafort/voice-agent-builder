@@ -1,4 +1,4 @@
-import type { FlowEndNode } from "@workspace/shared/agent-config/types"
+import type { FlowEndNode } from "@workspace/shared/api/agent-config/types"
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import { useAgentStore } from "@/stores/agent"

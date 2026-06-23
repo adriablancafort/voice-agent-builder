@@ -1,4 +1,4 @@
-import type { FlowNodeConfig } from "@workspace/shared/agent-config/types"
+import type { FlowNodeConfig } from "@workspace/shared/api/agent-config/types"
 
 export const SIDE_PANEL_OFFSET_PX = 250
 export const FOCUS_ZOOM = 0.9

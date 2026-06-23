@@ -1,4 +1,4 @@
-import type { FlowNodeInstructions } from "@workspace/shared/agent-config/types"
+import type { FlowNodeInstructions } from "@workspace/shared/api/agent-config/types"
 
 // Runtime flow
 export interface FlowConversationNode {

@@ -2,7 +2,7 @@ import type {
   AgentConfig,
   FlowEdgeConfig,
   FlowNodeConfig,
-} from "@workspace/shared/agent-config/types"
+} from "@workspace/shared/api/agent-config/types"
 
 export type ClientFlowNode = FlowNodeConfig & { selected?: boolean }
 export type ClientFlowEdge = FlowEdgeConfig & { selected?: boolean }

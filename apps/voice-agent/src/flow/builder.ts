@@ -1,4 +1,4 @@
-import type { AgentConfig } from "@workspace/shared/agent-config/types"
+import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 import type {
   FlowConversationNode,
   FlowEdge,

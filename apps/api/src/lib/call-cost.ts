@@ -1,9 +1,9 @@
 import type { CallChannel } from "@workspace/shared/api/calls/types"
-import { getModelPricePerMinute } from "@workspace/shared/models/helpers"
 import {
   PLATFORM_USD_PER_MINUTE,
   TELEPHONY_USD_PER_MINUTE,
-} from "@workspace/shared/models/rates"
+} from "@workspace/shared/constants/rates"
+import { getModelPricePerMinute } from "@workspace/shared/models/helpers"
 
 export function computeCallCosts({
   durationMs,

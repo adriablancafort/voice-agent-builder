@@ -7,11 +7,11 @@ import {
 } from "@xyflow/react"
 import { create } from "zustand"
 
-import { createDefaultAgentConfig } from "@workspace/shared/agent-config/defaults"
+import { createDefaultAgentConfig } from "@workspace/shared/agents/templates/defaults"
 import type {
   FlowEdgeConfig,
   FlowNodeConfig,
-} from "@workspace/shared/agent-config/types"
+} from "@workspace/shared/api/agent-config/types"
 import type { AgentDetailResponse } from "@workspace/shared/api/agents/types"
 import {
   applySelection,

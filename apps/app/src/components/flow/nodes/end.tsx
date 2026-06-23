@@ -1,7 +1,7 @@
 import { Handle, type Node, type NodeProps, Position } from "@xyflow/react"
 import { PhoneOff } from "lucide-react"
 
-import type { FlowEndNode } from "@workspace/shared/agent-config/types"
+import type { FlowEndNode } from "@workspace/shared/api/agent-config/types"
 import { FlowNodeBase } from "./base"
 
 type EndNodeType = Node<FlowEndNode["data"], "end">
