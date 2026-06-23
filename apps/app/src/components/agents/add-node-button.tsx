@@ -18,7 +18,7 @@ import { useAgentStore } from "@/stores/agent"
 export function AddNodeButton() {
   const [open, setOpen] = useState(false)
   const addNode = useAgentStore((state) => state.addNode)
-  const nodes = useAgentStore((state) => state.draftConfig.nodes)
+  const nodes = useAgentStore((state) => state.config.nodes)
   const flow = useReactFlow()
 
   function handleAdd(type: "start" | "conversation" | "end") {

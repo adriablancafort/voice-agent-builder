@@ -7,12 +7,12 @@ import type {
 export type ClientFlowNode = FlowNodeConfig & { selected?: boolean }
 export type ClientFlowEdge = FlowEdgeConfig & { selected?: boolean }
 
-export type ClientDraftConfig = Omit<AgentConfig, "nodes" | "edges"> & {
+export type ClientConfig = Omit<AgentConfig, "nodes" | "edges"> & {
   nodes: ClientFlowNode[]
   edges: ClientFlowEdge[]
 }
 
-export function toClientDraftConfig(server: AgentConfig): ClientDraftConfig {
+export function toClientConfig(server: AgentConfig): ClientConfig {
   return {
     ...server,
     nodes: server.nodes.map((node) => ({ ...node, selected: false })),
@@ -20,7 +20,7 @@ export function toClientDraftConfig(server: AgentConfig): ClientDraftConfig {
   }
 }
 
-export function toServerDraftConfig(config: ClientDraftConfig): AgentConfig {
+export function toServerConfig(config: ClientConfig): AgentConfig {
   return {
     ...config,
     nodes: config.nodes.map(({ selected: _, ...node }) => node),
@@ -29,9 +29,9 @@ export function toServerDraftConfig(config: ClientDraftConfig): AgentConfig {
 }
 
 export function applySelection(
-  config: ClientDraftConfig,
+  config: ClientConfig,
   selected?: { nodeId?: string; edgeId?: string }
-): ClientDraftConfig {
+): ClientConfig {
   return {
     ...config,
     nodes: config.nodes.map((node) => ({

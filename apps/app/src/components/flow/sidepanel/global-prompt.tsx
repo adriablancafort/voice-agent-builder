@@ -4,7 +4,7 @@ import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "./base"
 
 export function GlobalPromptPanel() {
-  const draftConfig = useAgentStore((state) => state.draftConfig)
+  const config = useAgentStore((state) => state.config)
   const setConfig = useAgentStore((state) => state.setConfig)
 
   return (
@@ -14,10 +14,10 @@ export function GlobalPromptPanel() {
           <FieldLabel>Global prompt</FieldLabel>
           <Textarea
             rows={12}
-            value={draftConfig.globalPrompt}
+            value={config.globalPrompt}
             onChange={(event) =>
               setConfig({
-                ...draftConfig,
+                ...config,
                 globalPrompt: event.target.value,
               })
             }

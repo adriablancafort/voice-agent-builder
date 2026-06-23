@@ -12,8 +12,8 @@ import {
 } from "@workspace/shared/api/agents/schemas"
 import type {
   AgentDetailResponse,
-  AgentDraftResponse,
   AgentListResponse,
+  AgentResponse,
   AgentVersionDetailResponse,
   AgentVersionSummaryResponse,
   AgentVersionsListResponse,
@@ -32,7 +32,7 @@ agentRoutes.get("/", requireOrganization, async (c) => {
         organizationId,
       },
       columns: {
-        draftConfig: false,
+        config: false,
       },
       with: {
         phoneNumbers: {
@@ -68,11 +68,11 @@ agentRoutes.post(
           id: crypto.randomUUID(),
           organizationId,
           name: payload.name,
-          draftConfig: payload.draftConfig,
+          config: payload.config,
         })
         .returning()
 
-      return c.json(agent satisfies AgentDraftResponse, 201)
+      return c.json(agent satisfies AgentResponse, 201)
     } catch {
       return c.json({ error: "Failed to create agent" }, 500)
     }
@@ -105,11 +105,11 @@ agentRoutes.post(
           id: crypto.randomUUID(),
           organizationId,
           name: `${sourceAgent.name} (copy)`.slice(0, 255),
-          draftConfig: sourceAgent.draftConfig,
+          config: sourceAgent.config,
         })
         .returning()
 
-      return c.json(duplicatedAgent satisfies AgentDraftResponse, 201)
+      return c.json(duplicatedAgent satisfies AgentResponse, 201)
     } catch {
       return c.json({ error: "Failed to duplicate agent" }, 500)
     }
@@ -171,7 +171,7 @@ agentRoutes.patch(
         .set({
           updatedAt: new Date(),
           name: payload.name,
-          draftConfig: payload.draftConfig,
+          config: payload.config,
         })
         .where(
           and(
@@ -185,7 +185,7 @@ agentRoutes.patch(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      return c.json(agent satisfies AgentDraftResponse)
+      return c.json(agent satisfies AgentResponse)
     } catch {
       return c.json({ error: "Failed to update agent" }, 500)
     }
@@ -344,7 +344,7 @@ agentRoutes.post(
             number: nextNumber,
             name: payload.name,
             description: payload.description,
-            config: agent.draftConfig,
+            config: agent.config,
           })
           .returning({
             id: agentVersionsTable.id,

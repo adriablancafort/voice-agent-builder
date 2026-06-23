@@ -21,7 +21,7 @@ export const agentsTable = pgTable(
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
     name: varchar({ length: 255 }).notNull(),
-    draftConfig: jsonb("draft_config").$type<AgentConfig>().notNull(),
+    config: jsonb().$type<AgentConfig>().notNull(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
       .defaultNow()
       .notNull(),

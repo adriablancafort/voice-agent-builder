@@ -97,12 +97,12 @@ function ProviderModelSelect({
 }
 
 export function ModelsConfigPanel() {
-  const draftConfig = useAgentStore((state) => state.draftConfig)
+  const config = useAgentStore((state) => state.config)
   const setConfig = useAgentStore((state) => state.setConfig)
 
-  const ttsModelId = draftConfig.tts.model
+  const ttsModelId = config.tts.model
   const ttsVoices = getVoices(ttsModelId)
-  const ttsVoiceId = pickFirstVoice(ttsModelId, draftConfig.tts.voice)
+  const ttsVoiceId = pickFirstVoice(ttsModelId, config.tts.voice)
   const ttsVoice = ttsVoices.find((voice) => voice.id === ttsVoiceId)
 
   return (
@@ -111,11 +111,11 @@ export function ModelsConfigPanel() {
         <ProviderModelSelect
           kind="stt"
           label="STT"
-          modelId={draftConfig.stt.model}
+          modelId={config.stt.model}
           onModelChange={(model) => {
             setConfig({
-              ...draftConfig,
-              stt: { ...draftConfig.stt, model },
+              ...config,
+              stt: { ...config.stt, model },
             })
           }}
         />
@@ -123,11 +123,11 @@ export function ModelsConfigPanel() {
         <ProviderModelSelect
           kind="llm"
           label="LLM"
-          modelId={draftConfig.llm.model}
+          modelId={config.llm.model}
           onModelChange={(model) => {
             setConfig({
-              ...draftConfig,
-              llm: { ...draftConfig.llm, model },
+              ...config,
+              llm: { ...config.llm, model },
             })
           }}
         />
@@ -138,11 +138,11 @@ export function ModelsConfigPanel() {
           modelId={ttsModelId}
           onModelChange={(model) => {
             setConfig({
-              ...draftConfig,
+              ...config,
               tts: {
-                ...draftConfig.tts,
+                ...config.tts,
                 model,
-                voice: pickFirstVoice(model, draftConfig.tts.voice),
+                voice: pickFirstVoice(model, config.tts.voice),
               },
             })
           }}
@@ -155,8 +155,8 @@ export function ModelsConfigPanel() {
             onValueChange={(voice) => {
               if (!voice) return
               setConfig({
-                ...draftConfig,
-                tts: { ...draftConfig.tts, voice },
+                ...config,
+                tts: { ...config.tts, voice },
               })
             }}
           >

@@ -20,7 +20,7 @@ type FlowNodeActionsProps = {
 
 export function FlowNodeActions({ id }: FlowNodeActionsProps) {
   const { deleteElements, setCenter } = useReactFlow()
-  const nodes = useAgentStore((state) => state.draftConfig.nodes)
+  const nodes = useAgentStore((state) => state.config.nodes)
   const addNode = useAgentStore((state) => state.addNode)
   const original = nodes.find((entry) => entry.id === id)
 

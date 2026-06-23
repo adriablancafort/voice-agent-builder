@@ -10,8 +10,8 @@ import { EndNode } from "./nodes/end"
 import "./canvas.css"
 
 const selector = (state: ReturnType<typeof useAgentStore.getState>) => ({
-  nodes: state.draftConfig.nodes,
-  edges: state.draftConfig.edges,
+  nodes: state.config.nodes,
+  edges: state.config.edges,
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,

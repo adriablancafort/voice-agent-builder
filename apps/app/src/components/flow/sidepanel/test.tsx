@@ -10,15 +10,12 @@ import { FlowSidePanelBase } from "./base"
 
 export function TestPanel() {
   const agentId = useAgentStore((state) => state.id)
-  const draftConfig = useAgentStore((state) => state.draftConfig)
+  const config = useAgentStore((state) => state.config)
   const [variableValues, setVariableValues] = useState<Record<string, string>>(
     {}
   )
 
-  const variableKeys = useMemo(
-    () => collectVariableKeys(draftConfig),
-    [draftConfig]
-  )
+  const variableKeys = useMemo(() => collectVariableKeys(config), [config])
 
   const preCallContent =
     variableKeys.length > 0 ? (

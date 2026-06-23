@@ -35,7 +35,7 @@ callRoutes.post(
         columns: {
           id: true,
           organizationId: true,
-          draftConfig: true,
+          config: true,
         },
       })
 
@@ -43,7 +43,7 @@ callRoutes.post(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      let config = agent.draftConfig
+      let config = agent.config
       let agentVersionId: string | null = null
 
       if (payload.agentVersionId) {
@@ -143,7 +143,7 @@ callRoutes.post(
             id: phoneNumber.agentId,
           },
           columns: {
-            draftConfig: true,
+            config: true,
           },
         })
 
@@ -151,7 +151,7 @@ callRoutes.post(
           return c.json({ error: "Phone number not found" }, 404)
         }
 
-        config = agent.draftConfig
+        config = agent.config
       }
 
       const [call] = await db

@@ -8,7 +8,7 @@ import { Controller, useForm } from "react-hook-form"
 import { createDefaultAgentConfig } from "@workspace/shared/agents/templates/defaults"
 import { createAgentRequestSchema } from "@workspace/shared/api/agents/schemas"
 import type {
-  AgentDraftResponse,
+  AgentResponse,
   CreateAgentRequest,
 } from "@workspace/shared/api/agents/types"
 import { Button } from "@workspace/ui/components/button"
@@ -42,13 +42,13 @@ export function CreateAgentForm() {
     resolver: zodResolver(createAgentRequestSchema),
     defaultValues: {
       name: "",
-      draftConfig: createDefaultAgentConfig(),
+      config: createDefaultAgentConfig(),
     },
   })
 
   const createAgentMutation = useMutation({
     mutationFn: (values: CreateAgentRequest) =>
-      api.post<AgentDraftResponse, CreateAgentRequest>("/agents", {
+      api.post<AgentResponse, CreateAgentRequest>("/agents", {
         body: values,
       }),
     onSuccess: (agent) => {

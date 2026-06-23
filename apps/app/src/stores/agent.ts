@@ -15,11 +15,11 @@ import type {
 import type { AgentDetailResponse } from "@workspace/shared/api/agents/types"
 import {
   applySelection,
-  type ClientDraftConfig,
+  type ClientConfig,
   type ClientFlowEdge,
   type ClientFlowNode,
-  toClientDraftConfig,
-} from "@/components/flow/draft-config"
+  toClientConfig,
+} from "@/components/flow/agent-config"
 
 export type FlowSidePanelState =
   | { kind: "closed" }
@@ -29,15 +29,15 @@ export type FlowSidePanelState =
   | { kind: "node"; node: FlowNodeConfig }
   | { kind: "edge"; edge: FlowEdgeConfig }
 
-type AgentStoreState = Omit<AgentDetailResponse, "draftConfig"> & {
-  draftConfig: ClientDraftConfig
+type AgentStoreState = Omit<AgentDetailResponse, "config"> & {
+  config: ClientConfig
   sidePanel: FlowSidePanelState
 }
 
 type AgentStore = AgentStoreState & {
   setAgent: (agent: AgentDetailResponse) => void
   setName: (name: string) => void
-  setConfig: (draftConfig: ClientDraftConfig) => void
+  setConfig: (config: ClientConfig) => void
   setNode: (node: FlowNodeConfig) => void
   setEdge: (edge: FlowEdgeConfig) => void
   addNode: (node: FlowNodeConfig) => void
@@ -67,7 +67,7 @@ const CONNECT_GUARD_MS = 200
 const initialState: AgentStoreState = {
   id: "",
   name: "",
-  draftConfig: toClientDraftConfig(createDefaultAgentConfig()),
+  config: toClientConfig(createDefaultAgentConfig()),
   createdAt: new Date(),
   updatedAt: new Date(),
   versions: [],
@@ -81,7 +81,7 @@ export const useAgentStore = create<AgentStore>((set) => ({
       if (current.id !== agent.id) {
         return {
           ...agent,
-          draftConfig: toClientDraftConfig(agent.draftConfig),
+          config: toClientConfig(agent.config),
           sidePanel: closedSidePanel,
         }
       }
@@ -94,14 +94,14 @@ export const useAgentStore = create<AgentStore>((set) => ({
       }
     }),
   setName: (name) => set({ name }),
-  setConfig: (draftConfig) => set({ draftConfig }),
+  setConfig: (config) => set({ config }),
   setNode: (node) =>
     set((state) => ({
       sidePanel: { kind: "node", node },
-      draftConfig: applySelection(
+      config: applySelection(
         {
-          ...state.draftConfig,
-          nodes: state.draftConfig.nodes.map((entry) =>
+          ...state.config,
+          nodes: state.config.nodes.map((entry) =>
             entry.id === node.id ? node : entry
           ),
         },
@@ -111,10 +111,10 @@ export const useAgentStore = create<AgentStore>((set) => ({
   setEdge: (edge) =>
     set((state) => ({
       sidePanel: { kind: "edge", edge },
-      draftConfig: applySelection(
+      config: applySelection(
         {
-          ...state.draftConfig,
-          edges: state.draftConfig.edges.map((entry) =>
+          ...state.config,
+          edges: state.config.edges.map((entry) =>
             entry.id === edge.id ? edge : entry
           ),
         },
@@ -124,8 +124,8 @@ export const useAgentStore = create<AgentStore>((set) => ({
   addNode: (node) =>
     set((state) => ({
       sidePanel: { kind: "node", node },
-      draftConfig: applySelection(
-        { ...state.draftConfig, nodes: [...state.draftConfig.nodes, node] },
+      config: applySelection(
+        { ...state.config, nodes: [...state.config.nodes, node] },
         { nodeId: node.id }
       ),
     })),
@@ -136,7 +136,7 @@ export const useAgentStore = create<AgentStore>((set) => ({
     }
 
     set((state) => {
-      const nodes = applyNodeChanges(filtered, state.draftConfig.nodes)
+      const nodes = applyNodeChanges(filtered, state.config.nodes)
       const current = state.sidePanel
       const panel =
         current.kind === "node" &&
@@ -146,8 +146,8 @@ export const useAgentStore = create<AgentStore>((set) => ({
 
       return {
         sidePanel: panel,
-        draftConfig: applySelection(
-          { ...state.draftConfig, nodes },
+        config: applySelection(
+          { ...state.config, nodes },
           panelSelection(panel)
         ),
       }
@@ -162,7 +162,7 @@ export const useAgentStore = create<AgentStore>((set) => ({
     }
 
     set((state) => {
-      const edges = applyEdgeChanges(filtered, state.draftConfig.edges)
+      const edges = applyEdgeChanges(filtered, state.config.edges)
       const current = state.sidePanel
       const panel =
         current.kind === "edge" &&
@@ -172,8 +172,8 @@ export const useAgentStore = create<AgentStore>((set) => ({
 
       return {
         sidePanel: panel,
-        draftConfig: applySelection(
-          { ...state.draftConfig, edges },
+        config: applySelection(
+          { ...state.config, edges },
           panelSelection(panel)
         ),
       }
@@ -189,8 +189,8 @@ export const useAgentStore = create<AgentStore>((set) => ({
 
     set((state) => ({
       sidePanel: { kind: "edge", edge },
-      draftConfig: applySelection(
-        { ...state.draftConfig, edges: [...state.draftConfig.edges, edge] },
+      config: applySelection(
+        { ...state.config, edges: [...state.config.edges, edge] },
         { edgeId: edge.id }
       ),
     }))
@@ -198,12 +198,12 @@ export const useAgentStore = create<AgentStore>((set) => ({
   selectNode: (node) =>
     set((state) => ({
       sidePanel: { kind: "node", node },
-      draftConfig: applySelection(state.draftConfig, { nodeId: node.id }),
+      config: applySelection(state.config, { nodeId: node.id }),
     })),
   selectEdge: (edge) =>
     set((state) => ({
       sidePanel: { kind: "edge", edge },
-      draftConfig: applySelection(state.draftConfig, { edgeId: edge.id }),
+      config: applySelection(state.config, { edgeId: edge.id }),
     })),
   setSidePanel: (sidePanel) =>
     set((state) => {
@@ -216,10 +216,7 @@ export const useAgentStore = create<AgentStore>((set) => ({
 
       return {
         sidePanel,
-        draftConfig: applySelection(
-          state.draftConfig,
-          panelSelection(sidePanel)
-        ),
+        config: applySelection(state.config, panelSelection(sidePanel)),
       }
     }),
 }))

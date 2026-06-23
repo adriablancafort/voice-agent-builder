@@ -19,12 +19,12 @@ export const agentVersionParamsSchema = z.object({
 
 export const createAgentRequestSchema = z.object({
   name: agentNameSchema,
-  draftConfig: agentConfigSchema,
+  config: agentConfigSchema,
 })
 
 export const updateAgentRequestSchema = z.object({
   name: agentNameSchema,
-  draftConfig: agentConfigSchema,
+  config: agentConfigSchema,
 })
 
 export const publishAgentRequestSchema = z.object({

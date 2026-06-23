@@ -11,10 +11,10 @@ export type CreateAgentRequest = z.infer<typeof createAgentRequestSchema>
 export type UpdateAgentRequest = z.infer<typeof updateAgentRequestSchema>
 export type PublishAgentRequest = z.infer<typeof publishAgentRequestSchema>
 
-export type AgentDraftResponse = {
+export type AgentResponse = {
   id: string
   name: string
-  draftConfig: AgentConfig
+  config: AgentConfig
   createdAt: Date
   updatedAt: Date
 }
@@ -36,7 +36,7 @@ export type AgentListResponse = {
   phoneNumbers: { number: string }[]
 }[]
 
-export type AgentDetailResponse = AgentDraftResponse & {
+export type AgentDetailResponse = AgentResponse & {
   versions: AgentVersionSummaryResponse[]
 }
 
@@ -46,5 +46,5 @@ export type AgentVersionDetailResponse = AgentVersionSummaryResponse & {
   config: AgentConfig
 }
 
-export type DuplicateAgentResponse = AgentDraftResponse
+export type DuplicateAgentResponse = AgentResponse
 export type DeleteAgentResponse = { id: string }
