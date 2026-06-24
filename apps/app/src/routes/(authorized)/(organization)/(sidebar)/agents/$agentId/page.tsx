@@ -17,6 +17,7 @@ import {
 import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { AgentNameField } from "@/components/agents/agent-name-field"
+import { AgentVersionSelector } from "@/components/agents/agent-version-selector"
 import { PublishAgentForm } from "@/components/agents/publish-agent-form"
 import { SaveAgentButton } from "@/components/agents/save-agent-button"
 import { TestAgentButton } from "@/components/agents/test-agent-button"
@@ -79,6 +80,7 @@ function Header() {
       <div className="ml-auto flex space-x-3">
         <SaveAgentButton />
         <TestAgentButton />
+        <AgentVersionSelector />
         <PublishAgentForm />
       </div>
     </header>

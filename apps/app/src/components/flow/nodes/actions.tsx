@@ -20,6 +20,7 @@ type FlowNodeActionsProps = {
 
 export function FlowNodeActions({ id }: FlowNodeActionsProps) {
   const { deleteElements, setCenter } = useReactFlow()
+  const readOnly = useAgentStore((state) => state.readOnly)
   const nodes = useAgentStore((state) => state.config.nodes)
   const addNode = useAgentStore((state) => state.addNode)
   const original = nodes.find((entry) => entry.id === id)
@@ -45,7 +46,7 @@ export function FlowNodeActions({ id }: FlowNodeActionsProps) {
   }
 
   const actionClassName =
-    "flex size-6 items-center justify-center rounded-sm border border-border bg-popover transition-colors hover:bg-muted"
+    "flex size-6 items-center justify-center rounded-sm border border-border bg-popover transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-60"
 
   return (
     <div className="nopan nodrag absolute top-1/2 left-full ml-2 -translate-y-1/2 flex flex-col gap-1.5">
@@ -54,6 +55,7 @@ export function FlowNodeActions({ id }: FlowNodeActionsProps) {
           render={
             <button
               type="button"
+              disabled={readOnly}
               className={cn(actionClassName, "text-destructive")}
               onClick={() => deleteElements({ nodes: [{ id }] })}
             />
@@ -70,6 +72,7 @@ export function FlowNodeActions({ id }: FlowNodeActionsProps) {
           render={
             <button
               type="button"
+              disabled={readOnly}
               className={cn(actionClassName, "text-foreground")}
               onClick={handleDuplicate}
             />

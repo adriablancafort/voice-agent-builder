@@ -11,6 +11,7 @@ import { FlowSidePanelBase } from "./base"
 export function TestPanel() {
   const agent = useAgentStore((state) => state.agent)
   const config = useAgentStore((state) => state.config)
+  const activeVersionId = useAgentStore((state) => state.activeVersionId)
   const [variableValues, setVariableValues] = useState<Record<string, string>>(
     {}
   )
@@ -42,6 +43,7 @@ export function TestPanel() {
     <FlowSidePanelBase title="Test agent" contentClassName="p-0">
       <VoiceAgentClient
         agentId={agent.id}
+        agentVersionId={activeVersionId ?? undefined}
         variableValues={variableValues}
         preCallContent={preCallContent}
       >

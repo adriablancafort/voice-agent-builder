@@ -17,6 +17,7 @@ import { useAgentStore } from "@/stores/agent"
 
 export function AddNodeButton() {
   const [open, setOpen] = useState(false)
+  const readOnly = useAgentStore((state) => state.readOnly)
   const addNode = useAgentStore((state) => state.addNode)
   const nodes = useAgentStore((state) => state.config.nodes)
   const flow = useReactFlow()
@@ -73,8 +74,8 @@ export function AddNodeButton() {
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="w-48">
       <div className="relative">
-        <CollapsibleTrigger>
-          <Button>
+        <CollapsibleTrigger disabled={readOnly}>
+          <Button disabled={readOnly}>
             <Plus />
             Add node
           </Button>

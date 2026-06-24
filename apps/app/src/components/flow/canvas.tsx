@@ -12,6 +12,7 @@ import "./canvas.css"
 const selector = (state: ReturnType<typeof useAgentStore.getState>) => ({
   nodes: state.config.nodes,
   edges: state.config.edges,
+  readOnly: state.readOnly,
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
@@ -24,6 +25,7 @@ export default function Canvas() {
   const {
     nodes,
     edges,
+    readOnly,
     onNodesChange,
     onEdgesChange,
     onConnect,
@@ -41,6 +43,7 @@ export default function Canvas() {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
+      nodesConnectable={!readOnly}
       onNodeClick={(_, node) => selectNode(node)}
       onEdgeClick={(_, edge) => selectEdge(edge)}
       onPaneClick={() => setSidePanel({ kind: "closed" })}

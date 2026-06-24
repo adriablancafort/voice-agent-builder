@@ -9,6 +9,7 @@ type EdgePanelProps = {
 }
 
 export function EdgePanel({ edge }: EdgePanelProps) {
+  const readOnly = useAgentStore((state) => state.readOnly)
   const setEdge = useAgentStore((state) => state.setEdge)
 
   return (
@@ -18,6 +19,7 @@ export function EdgePanel({ edge }: EdgePanelProps) {
           <FieldLabel>Condition</FieldLabel>
           <Input
             value={edge.data.condition}
+            readOnly={readOnly}
             onChange={(event) =>
               setEdge({
                 ...edge,

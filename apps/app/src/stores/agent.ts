@@ -34,6 +34,9 @@ type FlowSelection = { nodeId?: string; edgeId?: string }
 type AgentEditorState = {
   agent: AgentDetailResponse
   config: ClientAgentConfig
+  readOnly: boolean
+  activeVersionNumber: number | null
+  activeVersionId: string | null
   sidePanel: FlowSidePanelState
 }
 
@@ -41,6 +44,10 @@ type AgentEditorStore = AgentEditorState & {
   setAgent: (agent: AgentDetailResponse) => void
   setConfig: (config: ClientAgentConfig) => void
   loadAgentConfig: (config: AgentConfig) => void
+  loadAgentVersionConfig: (
+    config: AgentConfig,
+    version: { id: string; number: number }
+  ) => void
   setNode: (node: FlowNodeConfig) => void
   setEdge: (edge: FlowEdgeConfig) => void
   addNode: (node: FlowNodeConfig) => void
@@ -99,6 +106,9 @@ function applySelection(
 const initialState: AgentEditorState = {
   agent: emptyAgent,
   config: toClientAgentConfig(createDefaultAgentConfig()),
+  readOnly: true,
+  activeVersionNumber: null,
+  activeVersionId: null,
   sidePanel: closedSidePanel,
 }
 
@@ -109,6 +119,18 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
   loadAgentConfig: (config) =>
     set((state) => ({
       config: toClientAgentConfig(config),
+      readOnly: false,
+      activeVersionNumber: null,
+      activeVersionId: null,
+      sidePanel: closedSidePanel,
+      agent: state.agent,
+    })),
+  loadAgentVersionConfig: (config, version) =>
+    set((state) => ({
+      config: toClientAgentConfig(config),
+      readOnly: true,
+      activeVersionNumber: version.number,
+      activeVersionId: version.id,
       sidePanel: closedSidePanel,
       agent: state.agent,
     })),
@@ -153,6 +175,10 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
     }
 
     set((state) => {
+      if (state.readOnly) {
+        return state
+      }
+
       const nodes = applyNodeChanges(filtered, state.config.nodes)
       const panel = state.sidePanel
       const sidePanel =
@@ -179,6 +205,10 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
     }
 
     set((state) => {
+      if (state.readOnly) {
+        return state
+      }
+
       const edges = applyEdgeChanges(filtered, state.config.edges)
       const panel = state.sidePanel
       const sidePanel =

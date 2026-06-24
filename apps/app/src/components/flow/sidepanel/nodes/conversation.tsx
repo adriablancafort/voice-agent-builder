@@ -11,6 +11,7 @@ type ConversationNodePanelProps = {
 }
 
 export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
+  const readOnly = useAgentStore((state) => state.readOnly)
   const setNode = useAgentStore((state) => state.setNode)
 
   return (
@@ -22,6 +23,7 @@ export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
           <FieldLabel>Name</FieldLabel>
           <Input
             value={node.data.name}
+            readOnly={readOnly}
             onChange={(event) =>
               setNode({
                 ...node,
@@ -45,8 +47,12 @@ export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
               }}
             >
               <TabsList>
-                <TabsTrigger value="agent">Agent</TabsTrigger>
-                <TabsTrigger value="user">User</TabsTrigger>
+                <TabsTrigger value="agent" disabled={readOnly}>
+                  Agent
+                </TabsTrigger>
+                <TabsTrigger value="user" disabled={readOnly}>
+                  User
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </Field>
@@ -67,14 +73,19 @@ export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
             }}
           >
             <TabsList>
-              <TabsTrigger value="prompt">Prompt</TabsTrigger>
-              <TabsTrigger value="say">Say</TabsTrigger>
+              <TabsTrigger value="prompt" disabled={readOnly}>
+                Prompt
+              </TabsTrigger>
+              <TabsTrigger value="say" disabled={readOnly}>
+                Say
+              </TabsTrigger>
             </TabsList>
           </Tabs>
 
           <Textarea
             rows={8}
             value={node.data.instructions.text}
+            readOnly={readOnly}
             onChange={(event) =>
               setNode({
                 ...node,

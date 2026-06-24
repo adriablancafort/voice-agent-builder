@@ -23,11 +23,13 @@ function ProviderModelSelect({
   label,
   modelId,
   onModelChange,
+  readOnly = false,
 }: {
   kind: ModelKind
   label: string
   modelId: string
   onModelChange: (modelId: string) => void
+  readOnly?: boolean
 }) {
   const providerId = getProviderId(kind, modelId)
   const sections = getModelSections(kind, modelId)
@@ -42,6 +44,7 @@ function ProviderModelSelect({
         <FieldLabel>{label}</FieldLabel>
         <Select
           value={providerId}
+          readOnly={readOnly}
           onValueChange={(nextProviderId) => {
             if (!nextProviderId) return
             const nextModel = pickFirstModel(kind, nextProviderId)
@@ -68,6 +71,7 @@ function ProviderModelSelect({
       <Field className="col-span-3">
         <Select
           value={modelId}
+          readOnly={readOnly}
           onValueChange={(nextModelId) => {
             if (nextModelId) onModelChange(nextModelId)
           }}
@@ -97,6 +101,7 @@ function ProviderModelSelect({
 }
 
 export function ModelsConfigPanel() {
+  const readOnly = useAgentStore((state) => state.readOnly)
   const config = useAgentStore((state) => state.config)
   const setConfig = useAgentStore((state) => state.setConfig)
 
@@ -112,6 +117,7 @@ export function ModelsConfigPanel() {
           kind="stt"
           label="STT"
           modelId={config.stt.model}
+          readOnly={readOnly}
           onModelChange={(model) => {
             setConfig({
               ...config,
@@ -124,6 +130,7 @@ export function ModelsConfigPanel() {
           kind="llm"
           label="LLM"
           modelId={config.llm.model}
+          readOnly={readOnly}
           onModelChange={(model) => {
             setConfig({
               ...config,
@@ -136,6 +143,7 @@ export function ModelsConfigPanel() {
           kind="tts"
           label="TTS"
           modelId={ttsModelId}
+          readOnly={readOnly}
           onModelChange={(model) => {
             setConfig({
               ...config,
@@ -152,6 +160,7 @@ export function ModelsConfigPanel() {
           <FieldLabel>Voice</FieldLabel>
           <Select
             value={ttsVoiceId ?? ""}
+            readOnly={readOnly}
             onValueChange={(voice) => {
               if (!voice) return
               setConfig({

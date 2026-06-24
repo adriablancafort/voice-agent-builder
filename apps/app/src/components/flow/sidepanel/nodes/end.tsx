@@ -9,6 +9,7 @@ type EndNodePanelProps = {
 }
 
 export function EndNodePanel({ node }: EndNodePanelProps) {
+  const readOnly = useAgentStore((state) => state.readOnly)
   const setNode = useAgentStore((state) => state.setNode)
 
   return (
@@ -18,6 +19,7 @@ export function EndNodePanel({ node }: EndNodePanelProps) {
           <FieldLabel>Name</FieldLabel>
           <Input
             value={node.data.name}
+            readOnly={readOnly}
             onChange={(event) =>
               setNode({
                 ...node,

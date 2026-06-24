@@ -4,6 +4,7 @@ import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "./base"
 
 export function GlobalPromptPanel() {
+  const readOnly = useAgentStore((state) => state.readOnly)
   const config = useAgentStore((state) => state.config)
   const setConfig = useAgentStore((state) => state.setConfig)
 
@@ -15,6 +16,7 @@ export function GlobalPromptPanel() {
           <Textarea
             rows={12}
             value={config.globalPrompt}
+            readOnly={readOnly}
             onChange={(event) =>
               setConfig({
                 ...config,

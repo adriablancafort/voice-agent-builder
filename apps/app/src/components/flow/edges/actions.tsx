@@ -6,6 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
+import { useAgentStore } from "@/stores/agent"
 
 type FlowEdgeActionsProps = {
   id: string
@@ -13,6 +14,7 @@ type FlowEdgeActionsProps = {
 
 export function FlowEdgeActions({ id }: FlowEdgeActionsProps) {
   const { deleteElements } = useReactFlow()
+  const readOnly = useAgentStore((state) => state.readOnly)
 
   return (
     <div className="nopan nodrag absolute top-1/2 left-full ml-2 -translate-y-1/2">
@@ -21,7 +23,8 @@ export function FlowEdgeActions({ id }: FlowEdgeActionsProps) {
           render={
             <button
               type="button"
-              className="flex size-6 items-center justify-center rounded-sm border border-border bg-popover text-destructive transition-colors hover:bg-muted"
+              disabled={readOnly}
+              className="flex size-6 items-center justify-center rounded-sm border border-border bg-popover text-destructive transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-60"
               onClick={() => deleteElements({ edges: [{ id }] })}
             />
           }

@@ -36,6 +36,7 @@ export function PublishAgentForm() {
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
   const agent = useAgentStore((state) => state.agent)
+  const readOnly = useAgentStore((state) => state.readOnly)
   const versions = agent.versions
   const nextVersionNumber =
     versions.length > 0
@@ -80,7 +81,7 @@ export function PublishAgentForm() {
         publishAgentMutation.reset()
       }}
     >
-      <Button onClick={() => setOpen(true)}>
+      <Button disabled={readOnly} onClick={() => setOpen(true)}>
         <UploadIcon />
         Publish
       </Button>

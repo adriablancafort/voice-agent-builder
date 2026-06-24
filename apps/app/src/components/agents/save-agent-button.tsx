@@ -14,6 +14,7 @@ import { useAgentStore } from "@/stores/agent"
 export function SaveAgentButton() {
   const queryClient = useQueryClient()
   const agent = useAgentStore((state) => state.agent)
+  const readOnly = useAgentStore((state) => state.readOnly)
   const config = useAgentStore((state) => state.config)
 
   const saveMutation = useMutation({
@@ -36,7 +37,7 @@ export function SaveAgentButton() {
   return (
     <Button
       variant="outline"
-      disabled={saveMutation.isPending}
+      disabled={readOnly || saveMutation.isPending}
       onClick={() => saveMutation.mutate()}
     >
       <SaveIcon />
