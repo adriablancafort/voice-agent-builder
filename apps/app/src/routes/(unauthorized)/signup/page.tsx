@@ -20,6 +20,7 @@ import {
   FieldSeparator,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
+import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { signIn, signUp } from "@/lib/auth/client"
@@ -165,10 +166,9 @@ function Page() {
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                      <Input
+                      <PasswordInput
                         {...field}
                         id={field.name}
-                        type="password"
                         autoComplete="new-password"
                         aria-invalid={fieldState.invalid}
                         disabled={signUpMutation.isPending}
@@ -188,10 +188,9 @@ function Page() {
                       <FieldLabel htmlFor={field.name}>
                         Confirm Password
                       </FieldLabel>
-                      <Input
+                      <PasswordInput
                         {...field}
                         id={field.name}
-                        type="password"
                         autoComplete="new-password"
                         aria-invalid={fieldState.invalid}
                         disabled={signUpMutation.isPending}

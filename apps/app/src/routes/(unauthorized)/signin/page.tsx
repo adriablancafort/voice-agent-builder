@@ -20,6 +20,7 @@ import {
   FieldSeparator,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
+import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { signIn } from "@/lib/auth/client"
@@ -136,10 +137,9 @@ function Page() {
                           Forgot your password?
                         </Link>
                       </div>
-                      <Input
+                      <PasswordInput
                         {...field}
                         id={field.name}
-                        type="password"
                         autoComplete="current-password"
                         aria-invalid={fieldState.invalid}
                         disabled={signInMutation.isPending}
