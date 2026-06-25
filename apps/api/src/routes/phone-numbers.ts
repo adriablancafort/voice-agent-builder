@@ -58,18 +58,20 @@ phoneNumberRoutes.post(
     try {
       const payload = c.req.valid("json")
 
-      const agent = await db.query.agentsTable.findFirst({
-        where: {
-          id: payload.agentId!,
-          organizationId,
-        },
-        columns: {
-          id: true,
-        },
-      })
+      if (payload.agentId) {
+        const agent = await db.query.agentsTable.findFirst({
+          where: {
+            id: payload.agentId,
+            organizationId,
+          },
+          columns: {
+            id: true,
+          },
+        })
 
-      if (!agent) {
-        return c.json({ error: "Agent not found" }, 404)
+        if (!agent) {
+          return c.json({ error: "Agent not found" }, 404)
+        }
       }
 
       const [phoneNumber] = await db

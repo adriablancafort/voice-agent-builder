@@ -73,6 +73,7 @@ export function PhoneNumbersDataTable({
   const table = useReactTable({
     data,
     columns,
+    getRowId: (row) => row.id,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
