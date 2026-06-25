@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Trash2Icon } from "lucide-react"
 
 import type {
   AgentsListItem,
@@ -67,7 +66,6 @@ export function DeleteAgentDialog({
             disabled={deleteAgentMutation.isPending}
             onClick={() => deleteAgentMutation.mutate()}
           >
-            <Trash2Icon />
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>

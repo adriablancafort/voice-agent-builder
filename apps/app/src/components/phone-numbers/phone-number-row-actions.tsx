@@ -102,7 +102,6 @@ export function PhoneNumberRowActions({
               disabled={deletePhoneNumberMutation.isPending}
               onClick={() => deletePhoneNumberMutation.mutate()}
             >
-              <Trash2Icon />
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

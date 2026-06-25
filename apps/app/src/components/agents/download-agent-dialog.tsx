@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { DownloadIcon } from "lucide-react"
 import { useState } from "react"
 
 import type {
@@ -159,10 +158,7 @@ export function DownloadAgentDialog({
             {downloadMutation.isPending ? (
               <Spinner className="mx-8 size-4" />
             ) : (
-              <>
-                <DownloadIcon />
-                Download
-              </>
+              "Download"
             )}
           </Button>
         </DialogFooter>
