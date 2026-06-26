@@ -5,15 +5,35 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  Search,
+} from "lucide-react"
 import { useState } from "react"
 
 import type {
   AgentsListItem,
   AgentsListResponse,
 } from "@workspace/shared/api/agents/types"
-import { Input } from "@workspace/ui/components/input"
+import { Button } from "@workspace/ui/components/button"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@workspace/ui/components/input-group"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select"
 import {
   Table,
   TableBody,
@@ -63,6 +83,7 @@ export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
     },
@@ -70,14 +91,18 @@ export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
 
   return (
     <div>
-      <Input
-        value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-        onChange={(event) =>
-          table.getColumn("name")?.setFilterValue(event.target.value)
-        }
-        placeholder="Search agents..."
-        className="mb-5 max-w-xs"
-      />
+      <InputGroup className="mb-5 max-w-xs">
+        <InputGroupInput
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("name")?.setFilterValue(event.target.value)
+          }
+          placeholder="Search agents..."
+        />
+        <InputGroupAddon>
+          <Search />
+        </InputGroupAddon>
+      </InputGroup>
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -146,6 +171,64 @@ export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
             )}
           </TableBody>
         </Table>
+      </div>
+      <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center gap-4">
+          <Select
+            value={`${table.getState().pagination.pageSize}`}
+            onValueChange={(value) => table.setPageSize(Number(value))}
+          >
+            <SelectTrigger className="w-20">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <SelectItem key={pageSize} value={`${pageSize}`}>
+                  {pageSize}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <span className="text-sm font-medium">Rows per page</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium pr-2">
+            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount() || 1}
+          </span>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <ChevronsLeft />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <ChevronLeft />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <ChevronRight />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={!table.getCanNextPage()}
+          >
+            <ChevronsRight />
+          </Button>
+        </div>
       </div>
     </div>
   )
