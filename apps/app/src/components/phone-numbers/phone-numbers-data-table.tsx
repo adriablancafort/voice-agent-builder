@@ -5,6 +5,8 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table"
 import {
@@ -39,6 +41,7 @@ import {
   TableRow,
 } from "@workspace/ui/components/table"
 import { PhoneNumberRowActions } from "@/components/phone-numbers/phone-number-row-actions"
+import { SortableHeader } from "@/components/sortable-header"
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
@@ -73,7 +76,7 @@ const columns: ColumnDef<PhoneNumberListResponse[number]>[] = [
   },
   {
     accessorKey: "updatedAt",
-    header: "Updated",
+    header: ({ column }) => <SortableHeader column={column} title="Updated" />,
     cell: ({ row }) => dateFormatter.format(new Date(row.original.updatedAt)),
   },
   {
@@ -89,17 +92,21 @@ export function PhoneNumbersDataTable({
   data: PhoneNumberListResponse
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
 
   const table = useReactTable({
     data,
     columns,
     getRowId: (row) => row.id,
     onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
+      sorting,
     },
   })
 

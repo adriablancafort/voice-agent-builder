@@ -5,6 +5,8 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table"
 import {
@@ -45,6 +47,7 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
+import { SortableHeader } from "@/components/sortable-header"
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
@@ -113,12 +116,13 @@ function CostCell({ call }: { call: CallListResponse[number] }) {
 const columns: ColumnDef<CallListResponse[number]>[] = [
   {
     accessorKey: "startedAt",
-    header: "Started",
+    header: ({ column }) => <SortableHeader column={column} title="Started" />,
     cell: ({ row }) => dateFormatter.format(new Date(row.original.startedAt)),
   },
   {
     id: "duration",
-    header: "Duration",
+    accessorFn: (row) => row.durationMs,
+    header: ({ column }) => <SortableHeader column={column} title="Duration" />,
     cell: ({ row }) =>
       row.original.durationMs === null
         ? null
@@ -126,7 +130,8 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
   },
   {
     id: "cost",
-    header: "Cost",
+    accessorFn: (row) => parseCost(row.totalCost),
+    header: ({ column }) => <SortableHeader column={column} title="Cost" />,
     cell: ({ row }) => <CostCell call={row.original} />,
   },
   {
@@ -146,8 +151,8 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
   },
   {
     id: "agent",
-    header: "Agent",
     accessorFn: (row) => row.agent?.name ?? "",
+    header: ({ column }) => <SortableHeader column={column} title="Agent" />,
     cell: ({ row }) => row.original.agent?.name,
   },
   {
@@ -171,16 +176,20 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
 
 export function CallsDataTable({ data }: { data: CallListResponse }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
 
   const table = useReactTable({
     data,
     columns,
     onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
+      sorting,
     },
   })
 

@@ -6,6 +6,8 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table"
 import {
@@ -43,6 +45,7 @@ import {
   TableRow,
 } from "@workspace/ui/components/table"
 import { AgentRowActions } from "@/components/agents/agent-row-actions"
+import { SortableHeader } from "@/components/sortable-header"
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
@@ -52,7 +55,7 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
 const columns: ColumnDef<AgentsListItem>[] = [
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => <SortableHeader column={column} title="Name" />,
     cell: ({ row }) => row.original.name,
   },
   {
@@ -63,7 +66,7 @@ const columns: ColumnDef<AgentsListItem>[] = [
   },
   {
     accessorKey: "updatedAt",
-    header: "Updated",
+    header: ({ column }) => <SortableHeader column={column} title="Updated" />,
     cell: ({ row }) => dateFormatter.format(new Date(row.original.updatedAt)),
   },
   {
@@ -75,17 +78,21 @@ const columns: ColumnDef<AgentsListItem>[] = [
 
 export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const navigate = useNavigate()
 
   const table = useReactTable({
     data,
     columns,
     onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
+      sorting,
     },
   })
 
