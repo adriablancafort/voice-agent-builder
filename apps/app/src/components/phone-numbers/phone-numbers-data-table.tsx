@@ -41,6 +41,7 @@ import {
   TableRow,
 } from "@workspace/ui/components/table"
 import { PhoneNumberRowActions } from "@/components/phone-numbers/phone-number-row-actions"
+import { PhoneNumberSheet } from "@/components/phone-numbers/phone-number-sheet"
 import { SortableHeader } from "@/components/sortable-header"
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
@@ -93,6 +94,9 @@ export function PhoneNumbersDataTable({
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
+  const [selected, setSelected] = useState<
+    PhoneNumberListResponse[number] | null
+  >(null)
 
   const table = useReactTable({
     data,
@@ -150,7 +154,11 @@ export function PhoneNumbersDataTable({
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  className="cursor-pointer"
+                  onClick={() => setSelected(row.original)}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
@@ -242,6 +250,19 @@ export function PhoneNumbersDataTable({
           </Button>
         </div>
       </div>
+
+      {selected && (
+        <PhoneNumberSheet
+          key={selected.id}
+          phoneNumber={selected}
+          open
+          onOpenChange={(open) => {
+            if (!open) {
+              setSelected(null)
+            }
+          }}
+        />
+      )}
     </div>
   )
 }

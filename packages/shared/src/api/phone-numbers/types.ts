@@ -15,6 +15,9 @@ export type UpdatePhoneNumberRequest = z.infer<
 export type PhoneNumberResponse = {
   id: string
   number: string
+  sipAddress: string | null
+  sipUsername: string | null
+  sipPassword: string | null
   agentId: string | null
   agentVersionId: string | null
   createdAt: Date

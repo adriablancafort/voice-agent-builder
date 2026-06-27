@@ -1,13 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { PlusIcon } from "lucide-react"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 
-import type {
-  AgentsListResponse,
-  AgentVersionsListResponse,
-} from "@workspace/shared/api/agents/types"
 import { createPhoneNumberRequestSchema } from "@workspace/shared/api/phone-numbers/schemas"
 import type {
   CreatePhoneNumberRequest,
@@ -31,13 +27,7 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select"
+import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
@@ -50,24 +40,10 @@ export function AddPhoneNumberForm() {
     resolver: zodResolver(createPhoneNumberRequestSchema),
     defaultValues: {
       number: "",
-      agentId: null,
-      agentVersionId: null,
+      sipAddress: null,
+      sipUsername: null,
+      sipPassword: null,
     },
-  })
-
-  const selectedAgentId = form.watch("agentId") ?? undefined
-
-  const { data: agents = [] } = useQuery({
-    queryKey: ["agents", "list"],
-    queryFn: () => api.get<AgentsListResponse>("/agents"),
-    enabled: open,
-  })
-
-  const { data: agentVersions = [] } = useQuery({
-    queryKey: ["agents", "versions", selectedAgentId],
-    queryFn: () =>
-      api.get<AgentVersionsListResponse>(`/agents/${selectedAgentId}/versions`),
-    enabled: open && Boolean(selectedAgentId),
   })
 
   const saveMutation = useMutation({
@@ -80,7 +56,6 @@ export function AddPhoneNumberForm() {
       setOpen(false)
       form.reset()
       queryClient.invalidateQueries({ queryKey: ["phone-numbers"] })
-      queryClient.invalidateQueries({ queryKey: ["agents", "list"] })
     },
     onError: (error) => {
       toast.error(error.message)
@@ -135,40 +110,25 @@ export function AddPhoneNumberForm() {
             />
 
             <Controller
-              name="agentId"
+              name="sipAddress"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Agent</FieldLabel>
-                  <Select
-                    value={field.value ?? "none"}
-                    onValueChange={(value) => {
-                      const agentId = value === "none" ? null : value
-                      field.onChange(agentId)
-                      form.setValue("agentVersionId", null)
-                    }}
+                  <FieldLabel htmlFor={field.name}>SIP address</FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    ref={field.ref}
+                    value={field.value ?? ""}
+                    onBlur={field.onBlur}
+                    onChange={(event) =>
+                      field.onChange(event.target.value || null)
+                    }
+                    aria-invalid={fieldState.invalid}
+                    placeholder="sip.example.com"
+                    autoComplete="off"
                     disabled={saveMutation.isPending}
-                  >
-                    <SelectTrigger
-                      id={field.name}
-                      className="w-full text-foreground"
-                    >
-                      <SelectValue>
-                        {field.value
-                          ? agents.find((agent) => agent.id === field.value)
-                              ?.name
-                          : "No agent"}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">No agent</SelectItem>
-                      {agents.map((agent) => (
-                        <SelectItem key={agent.id} value={agent.id}>
-                          {agent.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -177,45 +137,50 @@ export function AddPhoneNumberForm() {
             />
 
             <Controller
-              name="agentVersionId"
+              name="sipUsername"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Version</FieldLabel>
-                  <Select
-                    value={
-                      selectedAgentId ? (field.value ?? "draft") : "no-version"
+                  <FieldLabel htmlFor={field.name}>SIP username</FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    ref={field.ref}
+                    value={field.value ?? ""}
+                    onBlur={field.onBlur}
+                    onChange={(event) =>
+                      field.onChange(event.target.value || null)
                     }
-                    onValueChange={(value) =>
-                      field.onChange(value === "draft" ? null : value)
+                    aria-invalid={fieldState.invalid}
+                    placeholder="username"
+                    autoComplete="off"
+                    disabled={saveMutation.isPending}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="sipPassword"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>SIP password</FieldLabel>
+                  <PasswordInput
+                    id={field.name}
+                    name={field.name}
+                    value={field.value ?? ""}
+                    onBlur={field.onBlur}
+                    onChange={(event) =>
+                      field.onChange(event.target.value || null)
                     }
-                    disabled={!selectedAgentId || saveMutation.isPending}
-                  >
-                    <SelectTrigger
-                      id={field.name}
-                      className="w-full text-foreground"
-                    >
-                      <SelectValue>
-                        {!selectedAgentId
-                          ? "No version"
-                          : field.value
-                            ? `V${
-                                agentVersions.find(
-                                  (version) => version.id === field.value
-                                )?.number ?? ""
-                              }`
-                            : "Latest (draft)"}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="draft">Latest (draft)</SelectItem>
-                      {agentVersions.map((version) => (
-                        <SelectItem key={version.id} value={version.id}>
-                          V{version.number}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="new-password"
+                    disabled={saveMutation.isPending}
+                  />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}

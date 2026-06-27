@@ -19,6 +19,9 @@ export const phoneNumbersTable = pgTable(
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
     number: varchar({ length: 16 }).notNull(),
+    sipAddress: varchar("sip_address", { length: 255 }),
+    sipUsername: varchar("sip_username", { length: 255 }),
+    sipPassword: varchar("sip_password", { length: 255 }),
     agentId: uuid("agent_id").references(() => agentsTable.id, {
       onDelete: "set null",
     }),

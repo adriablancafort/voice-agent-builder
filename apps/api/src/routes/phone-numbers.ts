@@ -13,6 +13,7 @@ import type {
   PhoneNumberResponse,
 } from "@workspace/shared/api/phone-numbers/types"
 import { requireOrganization } from "@/lib/auth/organization"
+import { deprovisionInbound, provisionInbound } from "@/lib/sip"
 import { validator } from "@/lib/validator"
 
 export const phoneNumberRoutes = new Hono()
@@ -80,10 +81,22 @@ phoneNumberRoutes.post(
           id: crypto.randomUUID(),
           organizationId,
           number: payload.number,
+          sipAddress: payload.sipAddress ?? null,
+          sipUsername: payload.sipUsername ?? null,
+          sipPassword: payload.sipPassword ?? null,
           agentId: payload.agentId ?? null,
           agentVersionId: payload.agentVersionId ?? null,
         })
         .returning()
+
+      try {
+        await provisionInbound(phoneNumber)
+      } catch (error) {
+        await db
+          .delete(phoneNumbersTable)
+          .where(eq(phoneNumbersTable.id, phoneNumber.id))
+        return c.json({ error: "Failed to provision inbound SIP" }, 502)
+      }
 
       return c.json(phoneNumber satisfies PhoneNumberResponse, 201)
     } catch {
@@ -120,12 +133,24 @@ phoneNumberRoutes.patch(
         }
       }
 
+      const existing = await db.query.phoneNumbersTable.findFirst({
+        where: {
+          id,
+          organizationId,
+        },
+        columns: {
+          number: true,
+        },
+      })
+
+      if (!existing) {
+        return c.json({ error: "Phone number not found" }, 404)
+      }
+
       const [phoneNumber] = await db
         .update(phoneNumbersTable)
         .set({
-          number: payload.number,
-          agentId: payload.agentId ?? null,
-          agentVersionId: payload.agentVersionId ?? null,
+          ...payload,
           updatedAt: new Date(),
         })
         .where(
@@ -136,8 +161,18 @@ phoneNumberRoutes.patch(
         )
         .returning()
 
-      if (!phoneNumber) {
-        return c.json({ error: "Phone number not found" }, 404)
+      const sipChanged =
+        payload.number !== undefined ||
+        payload.sipUsername !== undefined ||
+        payload.sipPassword !== undefined
+
+      if (sipChanged) {
+        await deprovisionInbound({ number: existing.number })
+        try {
+          await provisionInbound(phoneNumber)
+        } catch (error) {
+          return c.json({ error: "Failed to provision inbound SIP" }, 502)
+        }
       }
 
       return c.json(phoneNumber satisfies PhoneNumberResponse)
@@ -170,9 +205,11 @@ phoneNumberRoutes.delete(
         return c.json({ error: "Phone number not found" }, 404)
       }
 
+      await deprovisionInbound({ number: deletedPhoneNumber.number })
+
       return c.json(deletedPhoneNumber satisfies PhoneNumberResponse)
     } catch {
-      return c.json({ error: "Failed to delete phone number" }, 404)
+      return c.json({ error: "Failed to delete phone number" }, 500)
     }
   }
 )
