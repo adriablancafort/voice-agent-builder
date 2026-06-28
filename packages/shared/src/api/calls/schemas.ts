@@ -36,3 +36,13 @@ export const completeCallRequestSchema = z
     status: z.enum(["completed"]),
   })
   .strict()
+
+export const triggerOutboundCallRequestSchema = z
+  .object({
+    phoneNumberId: z.uuid(),
+    toNumber: z.e164(),
+    agentId: z.uuid(),
+    agentVersionId: z.uuid().nullable().optional(),
+    variables: z.record(z.string(), z.string()).optional(),
+  })
+  .strict()

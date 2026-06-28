@@ -1,0 +1,69 @@
+import { useMemo, useState } from "react"
+
+import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
+import type { CallVariableValues } from "@workspace/shared/api/calls/types"
+
+const VARIABLE_PATTERN = /\{\{\s*([a-z0-9_]+)\s*\}\}/g
+
+const SYSTEM_VARIABLES = new Set(["date", "time", "phone_number"])
+
+function extractKeys(text: string, keys: Set<string>) {
+  for (const match of text.matchAll(VARIABLE_PATTERN)) {
+    const key = match[1]
+    if (key && !SYSTEM_VARIABLES.has(key)) {
+      keys.add(key)
+    }
+  }
+}
+
+function collectVariableKeys(config: AgentConfig) {
+  const keys = new Set<string>()
+
+  extractKeys(config.globalPrompt, keys)
+
+  for (const node of config.nodes) {
+    if (node.type === "conversation") {
+      extractKeys(node.data.instructions.text, keys)
+    }
+  }
+
+  for (const edge of config.edges) {
+    extractKeys(edge.data.condition, keys)
+  }
+
+  return [...keys].sort()
+}
+
+export type VariableValues = {
+  keys: string[]
+  values: CallVariableValues
+  setValue: (key: string, value: string) => void
+  reset: () => void
+  toRecord: () => CallVariableValues | undefined
+}
+
+export function useVariableValues(
+  config: AgentConfig | undefined
+): VariableValues {
+  const [values, setValues] = useState<CallVariableValues>({})
+
+  const keys = useMemo(
+    () => (config ? collectVariableKeys(config) : []),
+    [config]
+  )
+
+  return {
+    keys,
+    values,
+    setValue: (key, value) =>
+      setValues((current) => ({ ...current, [key]: value })),
+    reset: () => setValues({}),
+    toRecord: () => {
+      const entries = keys
+        .filter((key) => (values[key] ?? "").length > 0)
+        .map((key) => [key, values[key]] as const)
+
+      return entries.length > 0 ? Object.fromEntries(entries) : undefined
+    },
+  }
+}

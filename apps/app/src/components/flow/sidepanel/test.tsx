@@ -1,10 +1,7 @@
-import { useMemo, useState } from "react"
-
-import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
-import { Input } from "@workspace/ui/components/input"
+import { VariableValuesFields } from "@/components/variable-values-fields"
 import { VoiceAgentClient } from "@/components/voice-agent-client"
 import { VoiceAgentTranscript } from "@/components/voice-agent-transcript"
-import { collectVariableKeys } from "@/lib/collect-variable-keys"
+import { useVariableValues } from "@/hooks/use-variable-values"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "./base"
 
@@ -12,40 +9,17 @@ export function TestPanel() {
   const agent = useAgentStore((state) => state.agent)
   const config = useAgentStore((state) => state.config)
   const activeVersionId = useAgentStore((state) => state.activeVersionId)
-  const [variableValues, setVariableValues] = useState<Record<string, string>>(
-    {}
-  )
-
-  const variableKeys = useMemo(() => collectVariableKeys(config), [config])
-
-  const preCallContent =
-    variableKeys.length > 0 ? (
-      <FieldGroup className="mb-4">
-        {variableKeys.map((key) => (
-          <Field key={key}>
-            <FieldLabel>{key}</FieldLabel>
-            <Input
-              value={variableValues[key] ?? ""}
-              onChange={(event) =>
-                setVariableValues((current) => ({
-                  ...current,
-                  [key]: event.target.value,
-                }))
-              }
-              placeholder={`Value for {{${key}}}`}
-            />
-          </Field>
-        ))}
-      </FieldGroup>
-    ) : null
+  const variables = useVariableValues(config)
 
   return (
     <FlowSidePanelBase title="Test agent" contentClassName="p-0">
       <VoiceAgentClient
         agentId={agent.id}
         agentVersionId={activeVersionId ?? undefined}
-        variableValues={variableValues}
-        preCallContent={preCallContent}
+        variableValues={variables.values}
+        preCallContent={
+          <VariableValuesFields className="mb-4" variables={variables} />
+        }
       >
         <VoiceAgentTranscript />
       </VoiceAgentClient>

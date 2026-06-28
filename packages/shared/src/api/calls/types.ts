@@ -6,6 +6,7 @@ import type {
   startInboundCallRequestSchema,
   startOutboundCallRequestSchema,
   startWebCallRequestSchema,
+  triggerOutboundCallRequestSchema,
 } from "./schemas"
 
 export type CallChannel = "web_call" | "phone_call"
@@ -30,6 +31,9 @@ export type StartInboundCallRequest = z.infer<
 >
 export type StartOutboundCallRequest = z.infer<
   typeof startOutboundCallRequestSchema
+>
+export type TriggerOutboundCallRequest = z.infer<
+  typeof triggerOutboundCallRequestSchema
 >
 export type CompleteCallRequest = z.infer<typeof completeCallRequestSchema>
 
@@ -71,3 +75,7 @@ export type CallListResponse = {
   agent: { name: string } | null
   agentVersion: { number: number } | null
 }[]
+
+export type TriggerOutboundCallResponse = {
+  ok: true
+}

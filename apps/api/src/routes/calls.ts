@@ -9,6 +9,7 @@ import {
   startInboundCallRequestSchema,
   startOutboundCallRequestSchema,
   startWebCallRequestSchema,
+  triggerOutboundCallRequestSchema,
 } from "@workspace/shared/api/calls/schemas"
 import type {
   CallListResponse,
@@ -334,3 +335,85 @@ callRoutes.get("/", requireOrganization, async (c) => {
     return c.json({ error: "Failed to load calls" }, 500)
   }
 })
+
+callRoutes.post(
+  "/outbound",
+  requireOrganization,
+  validator("json", triggerOutboundCallRequestSchema),
+  async (c) => {
+    const organizationId = c.get("organizationId")
+    const payload = c.req.valid("json")
+
+    try {
+      const phoneNumber = await db.query.phoneNumbersTable.findFirst({
+        where: {
+          id: payload.phoneNumberId,
+          organizationId,
+        },
+        columns: {
+          number: true,
+          sipAddress: true,
+          sipUsername: true,
+          sipPassword: true,
+        },
+      })
+
+      if (!phoneNumber) {
+        return c.json({ error: "Phone number not found" }, 404)
+      }
+
+      if (
+        !phoneNumber.sipAddress ||
+        !phoneNumber.sipUsername ||
+        !phoneNumber.sipPassword
+      ) {
+        return c.json({ error: "Phone number has no SIP connection" }, 400)
+      }
+
+      const agent = await db.query.agentsTable.findFirst({
+        where: {
+          id: payload.agentId,
+          organizationId,
+        },
+        columns: {
+          id: true,
+        },
+      })
+
+      if (!agent) {
+        return c.json({ error: "Agent not found" }, 404)
+      }
+
+      if (payload.agentVersionId) {
+        const version = await db.query.agentVersionsTable.findFirst({
+          where: {
+            id: payload.agentVersionId,
+            agentId: payload.agentId,
+          },
+          columns: {
+            id: true,
+          },
+        })
+
+        if (!version) {
+          return c.json({ error: "Agent version not found" }, 404)
+        }
+      }
+
+      await placeOutboundCall({
+        agentId: payload.agentId,
+        agentVersionId: payload.agentVersionId ?? null,
+        toNumber: payload.toNumber,
+        fromNumber: phoneNumber.number,
+        sipAddress: phoneNumber.sipAddress,
+        sipUsername: phoneNumber.sipUsername,
+        sipPassword: phoneNumber.sipPassword,
+        variables: payload.variables ?? {},
+      })
+
+      return c.json({ ok: true } satisfies TriggerOutboundCallResponse)
+    } catch {
+      return c.json({ error: "Failed to start outbound call" }, 500)
+    }
+  }
+)
